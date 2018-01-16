@@ -1,0 +1,2 @@
+import spacy as sc
+
