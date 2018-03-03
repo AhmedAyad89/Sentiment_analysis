@@ -1,188 +1,371 @@
 import tensorflow as tf
 import numpy as np
+# from depend.openAI.encoder import Model
+# import errno
+import os
+from datetime import datetime
 
-def loss_map(loss):
-	if (loss == 'softmax'):
-		def cross_entropy(pred, labels):
-			i = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits(logits=pred,labels=labels) )
+
+def loss_map(path):
+	if 'loss_computation' in path:
+		def custom(pred, labels):
+			i = tf.reduce_mean(path['loss_computation'](logits=pred, labels=labels))
 			return i
-		return cross_entropy
+		return custom
+	else:
+		if path['loss'] == 'softmax':
+			def cross_entropy(pred, labels):
+				i = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=labels) )
+				return i
+			return cross_entropy
 
-def construct_path(path):
+
+def construct_path(path, phase):
+	if('computation' in path):
+		return path['computation']
+	else:
 		def compute_path(input):
-			with tf.variable_scope(path['name'] + '/layers', reuse=False):
+			with tf.variable_scope(path['name'] + '/layers', reuse=tf.AUTO_REUSE ):
 				tmp = input
 				for num, layer in enumerate(path['layers']):
 					tmp = tf.layers.dense(tmp, layer, activation=path['activation'], name=str(num))
+					if('batch_norm' in path['options']):
+						tmp = tf.layers.batch_normalization(tmp, training=phase)
+					if ('noise' in path['options']):
+						noise = tf.random_normal(shape=tf.shape(tmp), mean=0.0, stddev=0.01, dtype=tf.float32)
+						tmp = tf.add(tmp, noise)
 			return tmp
 		return compute_path
 
+def softmax_predictor():
+	def predict(logits):
+		x = tf.nn.softmax(logits)
+		return tf.argmax(x,1)
+	return predict
+
+#NOTE: If a path is fed from another path, it should appear after it in the paths list
+#To create readymade paths, pass the function in path[computation]
+#to create readymade losses, pass the loss function into path[loss_computation]
 def config_graph():
 	paths = []
 
-	path ={}
-	path['input_dim'] = 50
-	path['layers'] = [50,10]
-	path['target'] ='sa'
+	path = {}
+	path['input_dim'] = 4096
+	path['layers'] = [2048, 1024,512]
 	path['activation'] = tf.nn.relu
 	path['name'] = 'shared1'
-	path['input'] = 'd1'
-	path['feed'] = 'd1'
+	path['input'] = 'semeval'
 	path['reuse'] = True
+	path['options'] = ('batch_norm')
 	paths.append(path)
 
-	path ={}
-	path['optimizer'] = tf.train.AdamOptimizer(name= 'path1_optimizer')
-	path['activation'] = tf.nn.relu
-	path['layers'] = [10,5]
-	path['loss'] = 'softmax'
-	path['target'] ='sa'
-	path['name'] = 'semeval_sub1'
+	# path = {}
+	# path['name'] = 'sentiment'
+	# path['input'] = 'shared1'
+	# path['input_dim'] = 2048
+	# path['layers'] = [512,256,4]
+	# path['optimizer'] = tf.train.AdamOptimizer(name='path1_optimizer')
+	# path['activation'] = tf.nn.relu
+	# path['loss'] = 'softmax'
+	# path['reuse'] = True
+	# path['options'] = ('batch_norm')
+	# paths.append(path)
+
+	path = {}
+	path['name'] = 'entities'
 	path['input'] = 'shared1'
-	path['feed'] = 'd1'
+	path['input_dim'] = 512
+	path['layers'] = [128,7]
+	path['optimizer'] = tf.train.AdamOptimizer(name='path2_optimizer' )
+	path['activation'] = tf.nn.relu
+	path['loss'] = 'softmax'
 	path['reuse'] = True
-	path['input_dim'] = 10
+	path['options'] = ('batch_norm')
+	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
+	path['predictor'] = softmax_predictor()
+	paths.append(path)
+
+	path = {}
+	path['name'] = 'attributes'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['layers'] = [128,6]
+	path['optimizer'] = tf.train.AdamOptimizer(name='path3_optimizer')
+	path['activation'] = tf.nn.relu
+	path['loss'] = 'softmax'
+	path['reuse'] = True
+	path['options'] = ('batch_norm')
+	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
+	path['predictor'] = softmax_predictor()
+
 	paths.append(path)
 
 	return paths
 
-def dataset_generator(dataset):
-	label_text= ['data', 'l1', 'l2', 'l3']
-	def gen():
-		for i in range (len(dataset['features']) ):
-			labels = [ x['features'][i] for x in  dataset['tasks'] ]
-			labels.insert(0,dataset['features'][i].encode('utf-8'))
-			x = [dataset['features'][i], labels ]
-			yield tuple(labels)
+
+def dataset_generator(dataset, holdout=None):
+	if holdout is not None:
+		length = len(dataset['features'])
+		p = np.random.randint(0, length, size=holdout)
+		def train_gen():
+			for i in range (length):
+				if(i in p):
+					continue
+				labels = [ x['features'][i] for x in  dataset['tasks'] ]
+				if(isinstance(dataset['features'][i], str)):
+					dataset['features'][i] = dataset['features'][i].encode('utf-8')
+				labels.insert(0, dataset['features'][i])
+				yield tuple(labels)
+		def cv_gen():
+			for i in p:
+				labels = [ x['features'][i] for x in  dataset['tasks'] ]
+				if(isinstance(dataset['features'][i], str)):
+					dataset['features'][i] = dataset['features'][i].encode('utf-8')
+				labels.insert(0, dataset['features'][i])
+				yield tuple(labels)
+		return train_gen, cv_gen
+	else:
+		def gen():
+			for i in range(length):
+				labels = [x['features'][i] for x in dataset['tasks']]
+				if (isinstance(dataset['features'][i], str)):
+					dataset['features'][i] = dataset['features'][i].encode('utf-8')
+				labels.insert(0, dataset['features'][i])
+				yield tuple(labels)
+
 	return gen
 
-def build_tf_dataset(datasets):
-	print('x')
+def inference_generator(data):
+	def gen():
+		for i in data:
+			yield i
+	return gen
 
-	sess = tf.Session()
-	d = []
-	handles=[]
+def build_tf_dataset(datasets, sess):
+	handles = {}
 	for dataset in datasets:
+		with tf.name_scope('Datasets/' + dataset['name']):
+			task_iterators = {}
+			dataset_handles = {}
+			if 'batch_size' not in dataset.keys():
+				batch_size = 20
+			else:
+				batch_size = dataset['batch_size']
 
+			dataset_col_labels = ['data']
+			types = [dataset['type']]
+			for task in dataset['tasks']:
+				types.append(task['type'])
+				dataset_col_labels.append(task['name'])
 
-		gen = dataset_generator(dataset)
-		g = gen()
-		x = next(g)
-		print(x[0])
-		types = []
-		types.append(dataset['type'])
-		for task in dataset['tasks']:
-			types.append(task['type'])
-		print(types)
-		d = tf.data.Dataset.from_generator(gen, output_types=tuple(types))
-		#d = d.shuffle(buffer_size=32)
-		#d = d.repeat(2)
+			tf.set_random_seed(np.random.randint(0,10000))
 
-		dataset_iterator = d.make_one_shot_iterator()
-		d_handle = dataset_iterator.string_handle()
-		handles.append(d_handle)
+			if 'holdout' in dataset:
+				h = dataset['holdout']
+				gen, cv_gen = dataset_generator(dataset, holdout = h)
+				
+				d = tf.data.Dataset.from_generator(cv_gen, output_types=tuple(types))
+				d = d.repeat().batch(h)
+				d = d.prefetch(h * 3)
 
+				with tf.name_scope('features'):
+					d_feat = d.map(lambda *x: x[0])
+					d_iter = d_feat.make_initializable_iterator()
+					d_iter.make_initializer(d_feat)
+					sess.run(d_iter.initializer)
+					dataset_handles['data_cv'] = sess.run(d_iter.string_handle())
 
-		it = d.make_one_shot_iterator()
-		for i in range(2):
-			t = sess.run(it.get_next())
-			#print(t[0], '/', t[1],'/', t[2])
-			print('\n++++++++++')
-	handle = tf.placeholder(tf.string, shape=[])
-	iterator = tf.data.Iterator.from_string_handle(handle, dataset_iterator.output_types)
+				for i in range(1, len(dataset_col_labels)):
+					with tf.name_scope(dataset_col_labels[i]):
+						data = (d.map(lambda *x: x[i]))
+						data_iter = data.make_initializable_iterator()
+						data_iter.make_initializer(data)
+						sess.run(data_iter.initializer)
+						task_iterators[dataset_col_labels[i]] = data_iter
+						dataset_handles[dataset_col_labels[i]+'_cv'] = sess.run(task_iterators[dataset_col_labels[i]].string_handle())
+		
+			else:
+				gen = dataset_generator(dataset)
 
-	return iterator, handles, handle, sess
+			d = tf.data.Dataset.from_generator(gen, output_types=tuple(types))
+			d = d.repeat(600).batch(batch_size)
+			d = d.shuffle(buffer_size=512)
+			d = d.prefetch(1200)
 
+			with tf.name_scope('features'):
+				d_feat = d.map(lambda *x:  x[0]  )
+				d_iter = d_feat.make_initializable_iterator()
+				d_iter.make_initializer(d_feat)
+				sess.run(d_iter.initializer)
+				dataset_handles['data'] = sess.run(d_iter.string_handle())
+
+			for i in range(1,len(dataset_col_labels)):
+				with tf.name_scope(dataset_col_labels[i]):
+					data = (d.map(lambda *x:  x[i]  ))
+					data_iter = data.make_initializable_iterator( )
+					data_iter.make_initializer(data)
+					sess.run(data_iter.initializer)
+					task_iterators[dataset_col_labels[i]] = data_iter
+					dataset_handles[dataset_col_labels[i]] = sess.run( task_iterators[dataset_col_labels[i]].string_handle() )
+
+			handles[dataset['name']] = dataset_handles
+	print(handles, '\n-------------------------------')
+	return handles
 
 
 #This is a constructor for a multi_task, multi_data tf classfier
-#inputs contains a dict of inputs, each input is list of data features. Dict keys are "datasetname"
-#outputs is a dict of outputs. each value is a list of labels. Dict keys are "datasetname#taskname"
-#paths are computational paths ending with a loss function
-class tf_multi_path_classifer():
-	def __init__(self, datasets, inputs, outputs, paths):
+#paths are computational paths ending with a loss function, or feeding other paths.
+class TfMultiPathClassifier():
+	def __init__(self, datasets, paths, params={}):
+
+		self.mydir = os.path.join(os.getcwd(), 'logs', datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+
 		tf.reset_default_graph()
+		self.sess = tf.Session()
+		self.phase = tf.placeholder(tf.bool, name='phase')
+		self.cv = tf.placeholder(tf.bool, name='crossvalidating')
+		self.params= params
+
+		self.accuracy= {}
+		self.feed = {}
+		self.inputs = {}
+		self.targets = {}
+		self.comp = {}
+		self.logits = {}
+		self.loss = {}
+		self.opt = {}
+		self.predictors={}
+		self.iterators = {}
+		self.handles = build_tf_dataset(datasets, self.sess)
+		self.handle_placeholders = {}
 
 		#prep datasets
-		self.dataset_tasks=[]
+		self.dataset_tasks={}
 		for dataset in datasets:
 			tasks=[]
 			for task in dataset['tasks']:
 				tasks.append(task['name'])
-			self.dataset_tasks.append(tasks)
-		print(tasks)
-
-		self.sess = tf.Session()
-		self.feed = {}
-		self.inputs = {}
-		self.targets = {}
-		self.comp={}
-		self.logits={}
-		self.loss={}
-		self.opt ={}
+			self.dataset_tasks[dataset['name']] = tasks
 
 		for p in paths:
-			with tf.name_scope(p['name']+ '/feed' ):
+			id = p['name']
+			with tf.name_scope(id + '/feed' ):
 				if (p['input'] not in self.comp.keys()):
-					self.inputs[p['name']] = tf.placeholder("float", [None, p['input_dim']], name = 'features')
-					self.feed[p['name']] = self.inputs[p['name']]
-					if ('loss' in p):
-						self.targets[p['name']] = tf.placeholder("float", [None, p['layers'][-1] ], name = 'targets')
+					self.handle_placeholders[id + 'input'] = tf.placeholder(tf.string, shape=[])
+					if('input_string' in p):
+						self.iterators[id + 'input'] = tf.data.Iterator.from_string_handle(
+							self.handle_placeholders[id + 'input'], tf.string, output_shapes=[None, p['input_dim'] ])  # TODO change input_types to be configurable
+					else:
+						self.iterators[id + 'input'] = tf.data.Iterator.from_string_handle(
+							self.handle_placeholders[id + 'input'] ,tf.float32, output_shapes=[None, p['input_dim']] )	#TODO change input_types to be configurable
+					self.inputs[id] = self.iterators[id + 'input'].get_next()
+					self.feed[id] = id
 				else:
-					self.inputs[p['name']] = self.logits[p['input']]
-					self.feed[p['name']] = self.feed[p['input']]
-					if('loss' in p):
-						self.targets[p['name']] = tf.placeholder("float", [None, p['layers'][-1]], name='targets')
+					self.inputs[id] = self.logits[p['input']]
+					self.feed[id] = self.feed[p['input']]
+				if('loss' in p):
+					self.handle_placeholders[id + 'target'] = tf.placeholder(tf.string, shape=[])
+					self.iterators[id + 'target'] = tf.data.Iterator.from_string_handle(
+						self.handle_placeholders[id + 'target'], tf.float32)  # TODO change input_types to be configurable
+					self.targets[id] = self.iterators[id + 'target'].get_next()
 
 			with tf.name_scope(''):
-				self.comp[p['name']] = construct_path(p)
-				self.logits[p['name']] = self.comp[p['name']](self.inputs[p['name']])
+				self.comp[id] = construct_path(p, self.phase)
+				self.logits[id] = self.comp[id](self.inputs[id])
+
+			if ('predictor' in p):
+				with tf.name_scope(id + 'predictor'):
+					self.predictors[id] = p['predictor'](self.logits[id])
 
 			if ('loss' in p):
-				with tf.name_scope(p['name'] + '/loss'):
-					self.loss[p['name']] = loss_map(p['loss'])(self.logits[p['name']], self.targets[p['name']] )
-				with tf.name_scope(p['name'] + '/optimizer'):
-					self.opt[p['name']] = p['optimizer'].minimize(self.loss[p['name']])
+				with tf.name_scope(id + '/loss'):
+					self.loss[id] = loss_map(p)(self.logits[id], self.targets[id] )
+					if(self.cv ):
+						tf.summary.scalar(id+ ' loss_cv',self.loss[id] )
+					else:
+						tf.summary.scalar(id + ' loss', self.loss[id])
 
-		self.datasets_optimizers=[]
-		self.datasets_losses = []
-		self.datasets_feeds = []
+					self.accuracy[id], accuracy_op = tf.metrics.accuracy(tf.argmax(self.targets[id],1), self.predictors[id], weights=None )
+					self.opt[id] = [accuracy_op]
+					tf.summary.scalar(id + 'accuracy', self.accuracy[id])
+				with tf.name_scope(id + '/optimizer'):
+					self.opt[id].append(p['optimizer'].minimize(self.loss[id]) )
+
+
+		self.dataset_paths={}
 		for i in self.dataset_tasks:
-			self.datasets_losses.append			([self.loss[x] for x in self.opt.keys() if x in i  ] )
-			self.datasets_optimizers.append	([self.opt[x] for x in self.loss.keys() if x in i  ] )
-			self.datasets_feeds.append			([self.feed[x] for x in self.feed.keys() if x in i ])
-		print('dataset losses ' , self.datasets_losses)
-		print('dataset optimizers ', self.datasets_optimizers )
+			self.dataset_paths[i] = {}
+			self.dataset_paths[i]['losses'] = [self.loss[x] for x in self.opt.keys() if x in self.dataset_tasks[i]  ]
+			self.dataset_paths[i]['optimizers'] = [self.opt[x] for x in self.loss.keys() if x in self.dataset_tasks[i]  ]
+			self.dataset_paths[i]['feeds'] = [self.feed[x] for x in self.feed.keys() if x in self.dataset_tasks[i] ]
+			input_feed= [(self.handle_placeholders[x + 'input'], self.handles[i]['data']) for x in self.dataset_paths[i]['feeds']]
+			target_feed=[(self.handle_placeholders[x+'target'], self.handles[i][x]) \
+									 for x in self.dataset_tasks[i] if x+ 'target' in self.handle_placeholders]
+			self.dataset_paths[i]['feed_dict'] = dict(input_feed + target_feed)
+			self.dataset_paths[i]['feed_dict'][self.phase] = True
+			if 'data_cv' in self.handles[i]:
+				input_feed = [(self.handle_placeholders[x + 'input'], self.handles[i]['data_cv']) for x in
+											self.dataset_paths[i]['feeds']]
+				target_feed = [(self.handle_placeholders[x + 'target'], self.handles[i][x+'_cv']) \
+											 for x in self.dataset_tasks[i] if x + 'target' in self.handle_placeholders]
+				self.dataset_paths[i]['feed_dict_cv'] = dict(input_feed + target_feed)
+				self.dataset_paths[i]['feed_dict_cv'][self.phase] = True
+
+		self.merged = tf.summary.merge_all()
+		self.train_writer = tf.summary.FileWriter(os.path.join(self.mydir , 'summaries'), self.sess.graph)
 
 	def train(self):
 		self.sess.run(tf.global_variables_initializer())
-		for c, dataset in enumerate (datasets):
-			for i in range(100):
-				# t, l = self.sess.run([ self.datasets_optimizers[c], self.datasets_losses[c] ] , \
-				# 								feed_dict= {self.feed[p['name']] : dataset['features'],\
-				# 														self.targets[p['name']] : task['features'] })
-				# print(t,l)
-				print()
-				if(i % 100 ==0):
-					print( self.sess.run([self.logits['semeval_sub1']], feed_dict={\
-						self.feed['semeval_sub1'] : datasets[0]['features']} ) )
-					# print(self.sess.run(self.get_logits(datasets[0]['features']) ))
+		self.sess.run(tf.local_variables_initializer())
+		for dataset in self.dataset_paths.values():
+			print(dataset)
+			cv_counter=0
+			for i in range(self.params['train_iter']):
+				_, loss, summaries, acc = self.sess.run(
+					[dataset['optimizers'], dataset['losses'], self.merged, self.accuracy],\
+					feed_dict= dataset['feed_dict'] )
+				self.train_writer.add_summary(summaries, i)
+				if(i % 100 == 0):
+					print(acc)
+					print(loss, i, '\n-------\n')
+					if('feed_dict_cv' in dataset):
+						print('cross validating')
+						loss, summaries = self.sess.run([dataset['losses'], self.merged], feed_dict= dataset['feed_dict_cv'] )
+						self.train_writer.add_summary(summaries, cv_counter)
+						print(loss)
 
 	def save(self):
-		writer = tf.summary.FileWriter('graph/graph')
+		writer = tf.summary.FileWriter(os.path.join(self.mydir, 'graph'))
 		writer.add_graph(self.sess.graph)
 
-	def get_logits(self, input):
-		input = tf.convert_to_tensor(input, tf.float32)
-		return self.comp['semeval_sub1'](input)
+
+	def get_raw_prediciton(self, pathname, input):
+		gen = inference_generator(input)
+		d = tf.data.Dataset.from_generator(gen, output_types= tf.float32)
+		d = d.batch(400)
+		iter = d.make_one_shot_iterator()
+		handle = self.sess.run(iter.string_handle())
+		if(pathname in self.predictors):
+			return self.predictors[pathname].eval(session= self.sess, feed_dict =
+			{self.phase:True, self.handle_placeholders[self.feed[pathname]+'input' ]: handle })
+
+	def get_prediciton(self, pathname, input):
+		gen = inference_generator(input)
+		d = tf.data.Dataset.from_generator(gen, output_types=tf.float32)
+		x = len(input)
+		d = d.batch(x)
+		iter = d.make_one_shot_iterator()
+		handle = self.sess.run(iter.string_handle())
+		if (pathname in self.predictors):
+			return self.predictors[pathname].eval(session=self.sess, feed_dict=
+			{self.phase: True, self.handle_placeholders[self.feed[pathname] + 'input']: handle})
 
 if __name__ == '__main__':
-	print(tf.__version__)
 	inputs={}
 	inputs['d1'] = np.zeros([2,2])
 	inputs['d2'] = np.ones([3,3])
 	outputs={}
-	outputs
+
 
 
 	paths = config_graph()
@@ -190,41 +373,26 @@ if __name__ == '__main__':
 	datasets = []
 	dataset={}
 	dataset['name'] = 'd1'
-	dataset['features'] = np.ones([50 , 50])
-	dataset2 = np.ones([50 , 50])
-	for i in range(50):
+	dataset['features'] = np.ones([500 , 5])
+	dataset['targets'] = np.zeros([500,5])
+	dataset['type'] = tf.float32
+	for i in range(500):
 		dataset['features'][i] *= i
-		dataset2[i] *= i+100
+		dataset['targets'][i][0] += 1
 
-	dataset['tasks'] = [{'name' : 'semeval_sub1', 'features' : dataset['features']/5  },\
-											{'name' : 'semeval_sub2', 'features' : dataset['features']*5  }, \
-											{'name': 'semeval_sub3', 'features': np.ones([50,1])}]
+	dataset['tasks'] = [{'name' : 'semeval_sub1', 'features' : dataset['features']/5 , 'type' : tf.float32 },\
+											{'name' : 'semeval_sub2', 'features' : dataset['features']*5, 'type' : tf.float32   }, \
+											{'name': 'semeval_sub3', 'features': 	dataset['targets'],  'type' : tf.float32 }]
+
+
 	datasets = [dataset]
 
-	gen = dataset_generator(dataset)
-
-	# g =gen()
-	# for i in g:
-	# 	print(i)
-	# 	print(len(i))
-
-	build_tf_dataset(datasets)
-	# with tf.Session() as sess:
-	#
-	# 	it, d1, d2, handle=build_tf_dataset(dataset['features'], dataset2,None)
-	#
-	# 	d1 = sess.run(d1)
-	# 	d2 = sess.run(d2)
-	# 	print(d1)
-	# 	while(True):
-	# 		print( sess.run(it.get_next(), feed_dict={handle : d1 } ) )
-	# 		print(sess.run(it.get_next(), feed_dict={handle: d2}))
-	#
-	# 		print('\n-----------------------')
+	#itera,_=build_tf_dataset(datasets)
 
 
-	#
-	#
-	# M = tf_multi_path_classifer(datasets,inputs,outputs, paths)
-	# M.save()
-	# M.train()
+	# for i in range(10):
+	# 	print( sess.run(itera['d1'].get_next() ))
+	M = TfMultiPathClassifier(datasets, inputs, outputs, paths)
+	M.save()
+	M.train()
+	print("resultssss   ",M.get_logits([[1,1,1,7,1,5,1,0,1,1]], 'semeval_sub3') )

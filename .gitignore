@@ -3,3 +3,15 @@ DataSet/semEval/
 depend/
 FeatureExtrac/semevalLaptop-openAI-data
 FeatureExtrac/semevalRestaurants-openAI-data
+DataSet/organic/
+FeatureExtrac/organic-openAItransform/
+logs/
+glove.840B.300d/
+FeatureExtrac/hannah-openAI-data
+FeatureExtrac/semevalLaptop_test-openAI-data
+FeatureExtrac/semevalRestaurant_test-openAI-data
+FeatureExtrac/semevalRestaurant-openAI-data
+comment
+comments.csv
+comments-spacy
+comments.txt

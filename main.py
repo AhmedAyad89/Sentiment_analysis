@@ -1,94 +1,79 @@
-from DataSet.semEval import SemEval
-from DataSet import preprocess
-from FeatureExtrac.autoencoder import *
-from FeatureExtrac.openAI_transfrom import openAI_transform
 from Learning.multipath_tf_dataset import *
 from visual import *
 from utils import  *
 from sklearn_pipeline import *
-import pickle
 import tensorflow as tf
+import os
+import numpy as np
+from DataSet.dataset_pipelines import *
+from sklearn import metrics, preprocessing
 
-data, labels = preprocess.flatten_single_label('DataSet/semEval/semevalRestaurant-rawTextData',\
-																							'DataSet/semEval/semevalRestaurant-rawTextLabels',)
 
-aspect_labels, aspect_labeling = preprocess.encode_labels(pickle_entities='DataSet/semEval/semevalRestaurant-Entities',\
-								pickle_attrs='DataSet/semEval/semevalRestaurant-Attributes', labels=labels, scheme=[True, True, False], one_hot=True)
-
-sentiment_labels, sentiment_labeling = preprocess.encode_labels(pickle_entities='DataSet/semEval/semevalRestaurant-Entities',\
-								pickle_attrs='DataSet/semEval/semevalRestaurant-Attributes', labels=labels, scheme=[False, False, True], one_hot=True)
-
-print(aspect_labeling)
+ds_dict = SemEvalPipe(data='Restaurant', subtask=[True, False, False])
+ds_dict2 = SemEvalPipe(single_label=True,data='Restaurant', subtask=[False, True, False])
 datasets=[]
-dataset = {}
-dataset['name'] = 'semeval_restaurants'
-dataset['type'] = tf.string
-dataset['features'] = data
-dataset['tasks'] = [{'name' : 'aspects', 'features' : aspect_labels, 'type': tf.float32},\
-										{'name': 'sentiment', 'features': sentiment_labels, 'type': tf.float32 }]
 
-datasets.append(dataset)
 
-data, labels = preprocess.flatten_single_label('DataSet/semEval/semevalLaptop-rawTextData',\
-																							'DataSet/semEval/semevalLaptop-rawTextLabels',)
+print(len(ds_dict['encoded_train_labels'][0]))
+print(len(ds_dict2['encoded_train_labels'][0]))
 
-aspect_labels, aspect_labeling = preprocess.encode_labels(pickle_entities='DataSet/semEval/semevalLaptop-Entities',\
-								pickle_attrs='DataSet/semEval/semevalLaptop-Attributes', labels=labels, scheme=[True, True, False], one_hot=True)
-
-sentiment_labels, sentiment_labeling = preprocess.encode_labels(pickle_entities='DataSet/semEval/semevalLaptop-Entities',\
-								pickle_attrs='DataSet/semEval/semevalLaptop-Attributes', labels=labels, scheme=[False, False, True], one_hot=True)
-
-print(aspect_labeling)
-dataset = {}
+dataset={}
 dataset['name'] = 'semeval_laptops'
-dataset['features'] = data
-dataset['type'] = tf.string
-dataset['tasks'] = [{'name' : 'aspects', 'features' : aspect_labels, 'type': tf.float32 }]#,\
-										#{'name': 'sentiment', 'features': sentiment_labels, 'type':tf.float32 }]
+dataset['holdout'] = 200
+dataset['features'] = ds_dict['train_vecs']
+dataset['type'] = tf.float32
+dataset['tasks'] = [{'name' : 'entities', 'features' : ds_dict['encoded_train_labels'], 'type': tf.float32 }
+										,{'name' : 'attributes', 'features' : ds_dict2['encoded_train_labels'], 'type': tf.float32 } ]
 
+# dataset={}
+# dataset['name'] = 'hannah_organic'
+# dataset['features'] = data_vecs
+# dataset['type'] = tf.float32
+# dataset['tasks'] = [{'name' : 'aspects', 'features' : aspect_labels, 'type': tf.float32 }]
+#
 datasets.append(dataset)
 
+test_labels = ds_dict['test_labels']
+test_data = ds_dict['test_data']
+entity_labeling = ds_dict['labeling']
+attribute_labeling = ds_dict2['labeling']
+paths = config_graph()
+params={}
+params['train_iter'] = 1000
+M = TfMultiPathClassifier(datasets, paths, params)
 
-iterator, handles, handle, sess = build_tf_dataset(datasets)
+M.save()
+M.train()
 
-handles = sess.run(handles)
-print(handles)
-for i in range(10):
-	line = sess.run(iterator.get_next(), feed_dict={handle: handles[0]})
-	print(line)
-	print('\n-----------------')
-	line = sess.run(iterator.get_next(), feed_dict={handle: handles[1]})
-	print(line)
-	print('\n-----------eof-----------------')
+x = M.get_prediciton('entities', ds_dict['test_vecs'])
+i = M.get_prediciton('attributes', ds_dict['test_vecs'])
+pred_labels = np.stack((x,i),1)
 
-# test_data, test_labels = preprocess.flatten_multi_label('DataSet/semEval/semevalRestaurant_test-rawTextData',\
-# 																												'DataSet/semEval/semevalRestaurant_test-rawTextLabels',)
-#
-# test_labels, test_labeling = preprocess.encode_labels(pickle_entities='DataSet/semEval/semevalRestaurant_test-Entities',\
-# 								pickle_attrs='DataSet/semEval/semevalRestaurant_test-Attributes', labels=test_labels, scheme=[True, True, False], one_hot=True, labeling=labeling)
+x = ds_dict['label_encoder'].transform(x)
+i = ds_dict2['label_encoder'].transform(i)
 
-# test_vecs = openAI_transform(test_data)
-# with open('FeatureExtrac/semevalRestaurants-openAI-data', 'rb') as fp:
-# 	data_vecs = pickle.load(fp)
-#
-#
+pred = np.concatenate((x,i),1)
+l = np.concatenate((ds_dict['encoded_test_labels'], ds_dict2['encoded_test_labels']), 1)
+
+try:
+	print('micro', metrics.f1_score(l, pred, average='micro'))
+	print('macro', metrics.f1_score(l, pred, average='macro'))
+	print('weight', metrics.f1_score(l, pred, average='weighted'))
+except:
+	print('x')
+print('samples', metrics.f1_score(l, pred, average='samples'))
 
 
-# for i in range(len(labels)):
-# 	labels[i] = labeling[labels[i]]
+counter = 0
+for i in range(len(test_labels)):
+	# if x[i] == 0 and test_labels[i] == 0:
+	# 	continue
+	print(i, '- ', test_data[i])#, test_aspect_labels[i], '\n',x[i])
+	print(entity_labeling[pred_labels[i][0]], attribute_labeling[pred_labels[i][1]] )
+	print(ds_dict['test_labels'][i], ds_dict2['test_labels'][i])
+	#print(y[i][test_aspect_labels[i]])
+	counter += 1
+	print('\n', '\n--------------------------\n')
 
-# wdata = data_wrap(data_vecs)
-# auto = autoencoder(wdata, num_step=12000)
-#
-# auto.train()
-#
-# reduced_data = auto.encode(data_vecs)
-# reduced_data = np.squeeze(reduced_data)
-# print(np.asarray(reduced_data).shape)
-# print(labels)
-# print('starting learning')
-# supervised(data, data_vecs, labels, test_vecs, test_labels)
 
-# print('\n-----------------------------------')
-# reduced_data = np.transpose(reduced_data)
-# supervised(data, reduced_data, labels)
+print(counter)

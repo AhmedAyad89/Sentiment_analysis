@@ -1,7 +1,7 @@
 import pickle
 from itertools import compress
 import numpy as np
-from sklearn.preprocessing import LabelEncoder,OneHotEncoder, normalize,MultiLabelBinarizer
+from sklearn.preprocessing import LabelEncoder,OneHotEncoder, normalize,MultiLabelBinarizer, LabelBinarizer
 
 
 #takes data as a list of lists and returns linear list
@@ -25,11 +25,12 @@ def flatten_single_label(pickle_data=None, pickle_labels =None, data=None, label
 		for j, sentence in enumerate(review):
 			new_data.append(sentence)
 			new_labels.append(labels[i][j][0])
+			#print(sentence, labels[i][j][0], '\n----------\n')
 
 	# for i in range(len(new_data)):
 	# 	print(new_data[i], new_labels[i])
 	# 	print('\n-----------------\n',i)
-	# print(len(new_data), len(new_labels))
+	print(len(new_data), len(new_labels))
 	return new_data, new_labels
 
 # this one returns labels as a list of lists
@@ -58,7 +59,7 @@ def flatten_multi_label(pickle_data=None, pickle_labels =None, data=None, labels
 #scheme defines which parts(entity, attribute, polarity) will be encoded
 #if modular set to false, each unique combination is given a label, otherwise each part gets its own labeling. not implemented yet
 def encode_labels(pickle_labels= None, pickle_entities=None, pickle_attrs=None, labels=None, label_set=None,  \
-									 one_hot= False, modular=True,scheme=[True,True,True], labeling=None):
+									 one_hot= False, modular=True,scheme=[True,True,True], labeling=None, encoder=None):
 	if (pickle_labels is not None):
 		with open(pickle_labels, 'rb') as lb:
 			labels = pickle.load(lb)
@@ -88,8 +89,12 @@ def encode_labels(pickle_labels= None, pickle_entities=None, pickle_attrs=None, 
 			L.append(labeling.index(filtered))
 			#print('-----------single--------------\n')
 		if (one_hot):
-			encoder = OneHotEncoder(sparse=False)
-			L = encoder.fit_transform(np.asarray(L).reshape(len(L), 1))
+			if encoder is None:
+				encoder = LabelBinarizer()
+				L = encoder.fit_transform(np.asarray(L).reshape(len(L), 1))
+			else:
+				L = encoder.transform(np.asarray(L).reshape(len(L), 1))
+		return L, encoder, labeling
 	else:																		#multi-label
 		for s in labels:
 			S=[]
@@ -103,23 +108,25 @@ def encode_labels(pickle_labels= None, pickle_entities=None, pickle_attrs=None, 
 					labeling.append(filtered)
 				S.append(labeling.index(filtered))
 			L.append(S)
-			print('-------------------------\n')
-		oh=[]
+			# print('-------------------------\n')
 		if (one_hot):
 			# for lab in L:
 			# 	temp = np.zeros(len(labeling))
 			# 	for i in lab:
 			# 		temp[i] = 1
 			# 	oh.append( temp )
-			L = MultiLabelBinarizer().fit_transform(L)
+			sum=0
+			for entry in L:
+				sum += len(entry)
+			print('avg length', sum/ len(L))
+			if encoder is None:
+				encoder = MultiLabelBinarizer()
+				L = encoder.fit_transform(L)
+			else:
+				L = encoder.transform(L)
+			return L, encoder, labeling
 
-	# for lab in L:
-	# 	print(lab)
-	# print(labeling)
-	# print(len(labeling))
-	# print(entities)
-	# print(attrs)
-	return L, labeling
+	return L,0, labeling
 
 if __name__ == '__main__':
 	print('x')

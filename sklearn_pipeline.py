@@ -12,9 +12,7 @@ from sklearn import metrics
 
 def supervised(data, data_vecs, labels, test_vecs=None, test_labels=None):
 
-	# model = PCA(n_components=1)
-	# labels = model.fit_transform(labels)
-	# print('PCA done')
+
 	if(test_vecs is None):
 		X_train, X_test, y_train, y_test = train_test_split(data_vecs, labels, test_size=0.2)
 	else:
@@ -23,9 +21,9 @@ def supervised(data, data_vecs, labels, test_vecs=None, test_labels=None):
 		y_train = labels
 		y_test=test_labels
 
-	clf = LogisticRegression(penalty='l1')
+	# clf = LogisticRegression(penalty='l1')
 	#clf = KNeighborsClassifier(weights='distance',n_neighbors=10, p=2, n_jobs=10)
-	clf = MLPClassifier(hidden_layer_sizes=(512,256,256,256), alpha=0.00005, batch_size=32)
+	clf = MLPClassifier(hidden_layer_sizes=(512,256,256,256), alpha=0.05, batch_size=8, early_stopping=True, max_iter=400)
 	clf.fit(X_train, y_train)
 
 	pred = clf.predict(X_test)
