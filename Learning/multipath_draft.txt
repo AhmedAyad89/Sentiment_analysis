@@ -1,0 +1,3 @@
+					self.accuracy[id], accuracy_op = tf.metrics.accuracy(tf.argmax(self.targets[id],1), self.predictors[id], weights=None)
+					self.opt[id] = [accuracy_op]
+					tf.summary.scalar(id + 'accuracy', self.accuracy[id])
