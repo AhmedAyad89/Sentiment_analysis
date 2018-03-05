@@ -4,108 +4,12 @@ import numpy as np
 # import errno
 import os
 from datetime import datetime
-
-
-def loss_map(path):
-	if 'loss_computation' in path:
-		def custom(pred, labels):
-			i = tf.reduce_mean(path['loss_computation'](logits=pred, labels=labels))
-			return i
-		return custom
-	else:
-		if path['loss'] == 'softmax':
-			def cross_entropy(pred, labels):
-				i = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=labels) )
-				return i
-			return cross_entropy
-
-
-def construct_path(path, phase):
-	if('computation' in path):
-		return path['computation']
-	else:
-		def compute_path(input):
-			with tf.variable_scope(path['name'] + '/layers', reuse=tf.AUTO_REUSE ):
-				tmp = input
-				for num, layer in enumerate(path['layers']):
-					tmp = tf.layers.dense(tmp, layer, activation=path['activation'], name=str(num))
-					if('batch_norm' in path['options']):
-						tmp = tf.layers.batch_normalization(tmp, training=phase)
-					if ('noise' in path['options']):
-						noise = tf.random_normal(shape=tf.shape(tmp), mean=0.0, stddev=0.01, dtype=tf.float32)
-						tmp = tf.add(tmp, noise)
-			return tmp
-		return compute_path
-
-def softmax_predictor():
-	def predict(logits):
-		x = tf.nn.softmax(logits)
-		return tf.argmax(x,1)
-	return predict
-
-#NOTE: If a path is fed from another path, it should appear after it in the paths list
-#To create readymade paths, pass the function in path[computation]
-#to create readymade losses, pass the loss function into path[loss_computation]
-def config_graph():
-	paths = []
-
-	path = {}
-	path['input_dim'] = 4096
-	path['layers'] = [2048, 1024,512]
-	path['activation'] = tf.nn.relu
-	path['name'] = 'shared1'
-	path['input'] = 'semeval'
-	path['reuse'] = True
-	path['options'] = ['batch_norm']
-	paths.append(path)
-
-	# path = {}
-	# path['name'] = 'sentiment'
-	# path['input'] = 'shared1'
-	# path['input_dim'] = 2048
-	# path['layers'] = [512,256,4]
-	# path['optimizer'] = tf.train.AdamOptimizer(name='path1_optimizer')
-	# path['activation'] = tf.nn.relu
-	# path['loss'] = 'softmax'
-	# path['reuse'] = True
-	# path['options'] = ('batch_norm')
-	# paths.append(path)
-
-	path = {}
-	path['name'] = 'entities'
-	path['input'] = 'shared1'
-	path['input_dim'] = 512
-	path['layers'] = [128,7]
-	path['optimizer'] = tf.train.AdamOptimizer(name='path2_optimizer' )
-	path['activation'] = tf.nn.relu
-	path['loss'] = 'softmax'
-	path['reuse'] = True
-	path['options'] = ['batch_norm']
-	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
-	path['predictor'] = softmax_predictor()
-	paths.append(path)
-
-	path = {}
-	path['name'] = 'attributes'
-	path['input'] = 'shared1'
-	path['input_dim'] = 512
-	path['layers'] = [128,6]
-	path['optimizer'] = tf.train.AdamOptimizer(name='path3_optimizer')
-	path['activation'] = tf.nn.relu
-	path['loss'] = 'softmax'
-	path['reuse'] = True
-	path['options'] = ['batch_norm']
-	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
-	path['predictor'] = softmax_predictor()
-
-	paths.append(path)
-
-	return paths
+from Learning.config_generator import *
 
 
 def dataset_generator(dataset, holdout=None):
+	length = len(dataset['features'])
 	if holdout is not None:
-		length = len(dataset['features'])
 		p = np.random.randint(0, length, size=holdout)
 		def train_gen():
 			for i in range (length):
@@ -239,6 +143,7 @@ class TfMultiPathClassifier():
 		self.handle_placeholders = {}
 		self.summaries = []
 		self.cv_summaries= []
+
 		#prep datasets
 		self.dataset_tasks={}
 		for dataset in datasets:
@@ -270,8 +175,8 @@ class TfMultiPathClassifier():
 					self.targets[id] = self.iterators[id + 'target'].get_next()
 
 			with tf.name_scope(''):
-				self.comp[id] = construct_path(p, self.phase)
-				self.logits[id] = self.comp[id](self.inputs[id])
+				self.comp[id] = p['computation']
+				self.logits[id] = self.comp[id](self.inputs[id], self.phase)
 
 			if ('predictor' in p):
 				with tf.name_scope(id + 'predictor'):
@@ -279,7 +184,7 @@ class TfMultiPathClassifier():
 
 			if ('loss' in p):
 				with tf.name_scope(id + '/loss'):
-					self.loss[id] = loss_map(p)(self.logits[id], self.targets[id])
+					self.loss[id] = p['loss'](self.logits[id], self.targets[id])
 					self.summaries.append(tf.summary.scalar(id + ' loss', self.loss[id]))
 					self.cv_summaries.append(tf.summary.scalar(id + ' loss_cv', self.loss[id]))
 

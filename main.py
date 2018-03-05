@@ -7,6 +7,7 @@ import os
 import numpy as np
 from DataSet.dataset_pipelines import *
 from sklearn import metrics, preprocessing
+from Learning.config_generator import *
 
 
 ds_dict = SemEvalPipe(data='Restaurant', subtask=[True, False, False])
@@ -19,7 +20,7 @@ print(len(ds_dict2['encoded_train_labels'][0]))
 
 dataset={}
 dataset['name'] = 'semeval_laptops'
-dataset['holdout'] = 200
+# dataset['holdout'] = 200
 dataset['features'] = ds_dict['train_vecs']
 dataset['type'] = tf.float32
 dataset['tasks'] = [{'name' : 'entities', 'features' : ds_dict['encoded_train_labels'], 'type': tf.float32 }
@@ -39,7 +40,7 @@ entity_labeling = ds_dict['labeling']
 attribute_labeling = ds_dict2['labeling']
 paths = config_graph()
 params={}
-params['train_iter'] = 1000
+params['train_iter'] = 800
 M = TfMultiPathClassifier(datasets, paths, params)
 
 M.save()
