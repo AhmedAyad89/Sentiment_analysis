@@ -1,7 +1,5 @@
 import tensorflow as tf
 import numpy as np
-# from depend.openAI.encoder import Model
-# import errno
 import os
 from datetime import datetime
 from Learning.config_generator import *
@@ -9,6 +7,7 @@ from Learning.config_generator import *
 
 def dataset_generator(dataset, holdout=None):
 	length = len(dataset['features'])
+	print('dataset length ', length)
 	if holdout is not None:
 		p = np.random.randint(0, length, size=holdout)
 		def train_gen():
@@ -52,8 +51,9 @@ def build_tf_dataset(datasets, sess):
 			task_iterators = {}
 			dataset_handles = {}
 			if 'batch_size' not in dataset.keys():
-				batch_size = 20
+				batch_size = 100
 			else:
+				print('batch size: ',  dataset['batch_size'])
 				batch_size = dataset['batch_size']
 
 			dataset_col_labels = ['data']
@@ -69,10 +69,10 @@ def build_tf_dataset(datasets, sess):
 				gen, cv_gen = dataset_generator(dataset, holdout = h)
 				d = tf.data.Dataset.from_generator(cv_gen, output_types=tuple(types))
 				d = d.repeat().batch(h)
-				d = d.prefetch(h * 3)
+				# d = d.prefetch(h * 3)
 
 				with tf.name_scope('features_cv'):
-					d_feat = d.map(lambda *x: x[0])
+					d_feat = d.map(lambda *x: x[0]).prefetch(h)
 					d_iter = d_feat.make_initializable_iterator()
 					d_iter.make_initializer(d_feat)
 					sess.run(d_iter.initializer)
@@ -80,7 +80,7 @@ def build_tf_dataset(datasets, sess):
 
 				for i in range(1, len(dataset_col_labels)):
 					with tf.name_scope(dataset_col_labels[i] + '_cv'):
-						data = (d.map(lambda *x: x[i]))
+						data = (d.map(lambda *x: x[i])).prefetch(h)
 						data_iter = data.make_initializable_iterator()
 						data_iter.make_initializer(data)
 						sess.run(data_iter.initializer)
@@ -91,12 +91,12 @@ def build_tf_dataset(datasets, sess):
 				gen = dataset_generator(dataset)
 
 			d = tf.data.Dataset.from_generator(gen, output_types=tuple(types))
-			d = d.repeat(600).batch(batch_size)
-			d = d.shuffle(buffer_size=512)
-			d = d.prefetch(1200)
+			d = d.shuffle(buffer_size=500)
+			d = d.repeat().batch(batch_size)
+			#d = d.prefetch(1500)
 
 			with tf.name_scope('features'):
-				d_feat = d.map(lambda *x:  x[0])
+				d_feat = d.map(lambda *x:  x[0]).prefetch(400)
 				d_iter = d_feat.make_initializable_iterator()
 				d_iter.make_initializer(d_feat)
 				sess.run(d_iter.initializer)
@@ -104,7 +104,7 @@ def build_tf_dataset(datasets, sess):
 
 			for i in range(1,len(dataset_col_labels)):
 				with tf.name_scope(dataset_col_labels[i]):
-					data = (d.map(lambda *x:  x[i]  ))
+					data = (d.map(lambda *x:  x[i] )).prefetch(400)
 					data_iter = data.make_initializable_iterator( )
 					data_iter.make_initializer(data)
 					sess.run(data_iter.initializer)
@@ -143,6 +143,7 @@ class TfMultiPathClassifier():
 		self.handle_placeholders = {}
 		self.summaries = []
 		self.cv_summaries= []
+		self.dataset_paths={}
 
 		#prep datasets
 		self.dataset_tasks={}
@@ -152,6 +153,10 @@ class TfMultiPathClassifier():
 				tasks.append(task['name'])
 			self.dataset_tasks[dataset['name']] = tasks
 
+			self.build_graph(paths)
+
+
+	def build_graph(self, paths):
 		for p in paths:
 			id = p['name']
 			with tf.name_scope(id + '/feed' ):
@@ -181,6 +186,9 @@ class TfMultiPathClassifier():
 			if ('predictor' in p):
 				with tf.name_scope(id + 'predictor'):
 					self.predictors[id] = p['predictor'](self.logits[id])
+			else:
+				with tf.name_scope(id + 'predictor'):
+					self.predictors[id] = self.logits[id]
 
 			if ('loss' in p):
 				with tf.name_scope(id + '/loss'):
@@ -192,12 +200,14 @@ class TfMultiPathClassifier():
 					self.opt[id] = (p['optimizer'].minimize(self.loss[id]))
 
 
-		self.dataset_paths={}
 		for i in self.dataset_tasks:
 			self.dataset_paths[i] = {}
 			self.dataset_paths[i]['losses'] = [self.loss[x] for x in self.opt.keys() if x in self.dataset_tasks[i]]
 			self.dataset_paths[i]['optimizers'] = [self.opt[x] for x in self.loss.keys() if x in self.dataset_tasks[i]]
 			self.dataset_paths[i]['feeds'] = [self.feed[x] for x in self.feed.keys() if x in self.dataset_tasks[i]]
+			self.dataset_paths[i]['predictors'] = [self.predictors[x] for x in sorted(self.predictors.keys()) if x in self.dataset_tasks[i]]
+			self.dataset_paths[i]['targets'] = [self.targets[x] for x in sorted(self.targets.keys()) if x in self.dataset_tasks[i]]
+
 			input_feed= [(self.handle_placeholders[x + 'input'], self.handles[i]['data']) for x in self.dataset_paths[i]['feeds']]
 			target_feed=[(self.handle_placeholders[x+'target'], self.handles[i][x]) \
 									 for x in self.dataset_tasks[i] if x+ 'target' in self.handle_placeholders]
@@ -209,11 +219,12 @@ class TfMultiPathClassifier():
 				target_feed = [(self.handle_placeholders[x + 'target'], self.handles[i][x+'_cv']) \
 											 for x in self.dataset_tasks[i] if x + 'target' in self.handle_placeholders]
 				self.dataset_paths[i]['feed_dict_cv'] = dict(input_feed + target_feed)
-				self.dataset_paths[i]['feed_dict_cv'][self.phase] = True
+				self.dataset_paths[i]['feed_dict_cv'][self.phase] = False
 
 		self.merged = tf.summary.merge(self.summaries, 'train summaries')
 		self.merged_cv = tf.summary.merge(self.cv_summaries, 'cv summaries')
 		self.train_writer = tf.summary.FileWriter(os.path.join(self.mydir , 'summaries'), self.sess.graph)
+
 
 	def train(self):
 		self.sess.run(tf.global_variables_initializer())
@@ -226,14 +237,20 @@ class TfMultiPathClassifier():
 					[dataset['optimizers'], dataset['losses'], self.merged, self.accuracy],\
 					feed_dict= dataset['feed_dict'] )
 
-				if(i % 100 == 0):
+				if(i % 500 == 0):
 					self.train_writer.add_summary(summaries, cv_counter)
 					print(acc)
 					print(loss, i, '\n-------\n')
 					if('feed_dict_cv' in dataset):
 						print('cross validating')
-						loss, summaries = self.sess.run([dataset['losses'], self.merged_cv ], feed_dict= dataset['feed_dict_cv'] )
-						
+						loss, summaries, pred, ll = self.sess.run\
+							([dataset['losses'], self.merged_cv, dataset['predictors'], dataset['targets']],
+							 feed_dict= dataset['feed_dict_cv'])
+
+
+						for out_counter, p in enumerate(pred):
+							f1_from_integrated_predictions(pred=p, labels=ll[out_counter])
+
 						self.train_writer.add_summary(summaries, cv_counter)
 						print('cv loss', loss, '\n----------------------\n')
 						cv_counter += 1
@@ -241,7 +258,6 @@ class TfMultiPathClassifier():
 	def save(self):
 		writer = tf.summary.FileWriter(os.path.join(self.mydir, 'graph'))
 		writer.add_graph(self.sess.graph)
-
 
 	def get_raw_prediciton(self, pathname, input):
 		gen = inference_generator(input)
@@ -262,7 +278,7 @@ class TfMultiPathClassifier():
 		handle = self.sess.run(iter.string_handle())
 		if (pathname in self.predictors):
 			return self.predictors[pathname].eval(session=self.sess, feed_dict=
-			{self.phase: True, self.handle_placeholders[self.feed[pathname] + 'input']: handle})
+			{self.phase: False, self.handle_placeholders[self.feed[pathname] + 'input']: handle})
 
 if __name__ == '__main__':
 	inputs={}

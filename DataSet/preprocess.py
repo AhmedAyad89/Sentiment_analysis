@@ -48,6 +48,10 @@ def flatten_multi_label(pickle_data=None, pickle_labels =None, data=None, labels
 
 	new_data = []
 	new_labels=[]
+	for i, label in enumerate(labels):
+		for j, e in enumerate(label):
+			if e == [['NA', 'NA', 'NA']]:
+				labels[i][j] = []
 	for i,review in enumerate(data):
 		for j, sentence in enumerate(review):
 			new_data.append(sentence)
@@ -76,7 +80,7 @@ def encode_labels(pickle_labels= None, pickle_entities=None, pickle_attrs=None, 
 	if (labeling is None):
 		labeling=[]
 	L=[]
-	if ( not isinstance(labels[0][0], list) ):	#single label
+	if ( not isinstance(labels[1][0], list) ):	#single label
 		for e in labels:
 			#print(e)
 			#e[0] = entities.index(e[0])
@@ -87,7 +91,7 @@ def encode_labels(pickle_labels= None, pickle_entities=None, pickle_attrs=None, 
 			if (filtered not in labeling):
 				labeling.append(filtered)
 			L.append(labeling.index(filtered))
-			#print('-----------single--------------\n')
+			# print('-----------single--------------\n')
 		if (one_hot):
 			if encoder is None:
 				encoder = LabelBinarizer()
@@ -130,6 +134,6 @@ def encode_labels(pickle_labels= None, pickle_entities=None, pickle_attrs=None, 
 
 if __name__ == '__main__':
 	print('x')
-	data, labels = flatten_single_label('semEval\\semevalLaptop-rawTextData','semEval\\semevalLaptop-rawTextLabels')
+	data, labels = flatten_multi_label('semEval\\semevalLaptop-rawTextData','semEval\\semevalLaptop-rawTextLabels')
 	encode_labels(pickle_entities='semEval\\semevalLaptop-Entities',\
 								pickle_attrs='semEval\\semevalLaptop-Attributes', labels=labels, scheme=[True, True, False], one_hot=True)

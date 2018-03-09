@@ -1,0 +1,60 @@
+def config_single_graph():
+	paths = []
+
+	path = {}
+	path['input_dim'] = 4096
+	path['name'] = 'shared1'
+	path['computation'] = construct_path(path['name'], [1024], batch_norm=True,
+																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.000001, scale_l2=0.000005, scope=None))
+	path['input'] = 'semeval'
+	paths.append(path)
+
+	# path = {}
+	# path['name'] = 'sentiment'
+	# path['input'] = 'shared1'
+	# path['input_dim'] = 2048
+	# path['layers'] = [512,256,4]
+	# path['optimizer'] = tf.train.AdamOptimizer(name='path1_optimizer')
+	# path['activation'] = tf.nn.relu
+	# path['loss'] = 'softmax'
+	# path['reuse'] = True
+	# path['options'] = ('batch_norm')
+	# paths.append(path)
+
+	path = {}
+	path['name'] = 'entities'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [6], batch_norm=True,
+																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path2_optimizer', learning_rate=0.001)
+	path['loss'] = loss_map('sigmoid')
+	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
+	path['predictor'] = sigmoid_predictor()
+	paths.append(path)
+
+	path = {}
+	path['name'] = 'attributes'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [5],batch_norm=True,
+																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.00001, scale_l2=0.00005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path3_optimizer', learning_rate=0.001)
+	path['loss'] = loss_map('sigmoid')
+	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
+	path['predictor'] = sigmoid_predictor()
+	paths.append(path)
+
+	path = {}
+	path['name'] = 'aspects'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [512, 256,12], batch_norm=True,
+																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.00001, scale_l2=0.00005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer', learning_rate=0.001 )
+	path['loss'] = loss_map('sigmoid')
+	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
+	path['predictor'] = sigmoid_predictor()
+	paths.append(path)
+
+	return paths

@@ -2,6 +2,10 @@ import numpy as np
 from sklearn.utils import shuffle as skshuffle
 import json
 import csv
+from sklearn.preprocessing import scale
+from sklearn import metrics
+import codecs
+
 def multi_hot_decode(list):
 	L=[]
 	for line in list:
@@ -62,6 +66,48 @@ class data_wrap(object):
 			return x,y
 		return x
 
+def single_label_metrics(pred, labels, encoded_labels, labeling, data):
+	try:
+		print('micro', metrics.f1_score(encoded_labels, pred, average='micro'))
+	# print('macro', metrics.f1_score(l, pred, average='macro'))
+	# print('weight', metrics.f1_score(l, pred, average='weighted'))
+	except Exception as e:
+		print(e)
+	print('f1 samples', metrics.f1_score(encoded_labels, pred, average='samples'))
+	print('precision samples', metrics.precision_score(encoded_labels, pred, average='samples'))
+	print('recall samples', metrics.recall_score(encoded_labels, pred, average='samples'))
+	decoded_pred = np.where(pred == 1)[1]
+	raw_pred=[]
+	for i in range(len(labels)):
+		if labels[i] == ['not relevant', 'not relevant']:
+			continue
+		raw_pred.append(labeling[decoded_pred[i]])
+		print(i, '- ', data[i])
+		print('Prediction: ', (labeling[decoded_pred[i]]), decoded_pred[i])
+		print('Label: ', labels[i])
+		print('\n', '\n--------------------------\n')
+	return raw_pred
+
+def multi_label_metrics(pred, labels, encoded_labels, labeling, data):
+	try:
+		print('micro', metrics.f1_score(encoded_labels, pred, average='micro'))
+	except Exception as e:
+		print(e)
+	print('f1 samples', metrics.f1_score(encoded_labels, pred, average='samples'))
+	print('precision samples', metrics.precision_score(encoded_labels, pred, average='samples'))
+	print('recall samples', metrics.recall_score(encoded_labels, pred, average='samples'))
+
+	decoded_pred = []
+	for p in pred:
+		decoded_pred.append(np.where(p == 1)[0])
+
+	for i in range(len(labels)):
+		if labels[i] == ['not relevant', 'not relevant']:
+			continue
+		print(i, '- ', data[i])
+		print('Prediction: ',  [labeling[x] for x in decoded_pred[i]] )
+		print('Label: ', labels[i])
+		print('\n', '\n--------------------------\n')
 
 #gets tokenized comment texts
 def parse_tokenized_comments_json(path, sentence_level = True):
@@ -107,7 +153,7 @@ def parse_tokenized_for_labelling(path, sentence_level=True):
 
 def parse_hannah_legend(path):
 	with open(path, 'r', encoding='mbcs') as fp:
-		reader = csv.reader(fp)
+		reader = csv.reader(fp, delimiter=',')
 		listed = [x for x in reader]
 	entity_dict = {}
 	attr_dict = {}
@@ -156,7 +202,7 @@ def parse_hannah_csv(path):
 	print(len(data))
 
 	for i in range(len(data)):
-		if relevance [i] == '9':
+		if relevance [i] == '9' or relevance [i] == 'g':
 			if entities[i] == ['']:
 				assert attr[i] == ['']
 				entities[i] = ['rel']
@@ -169,7 +215,10 @@ def parse_hannah_csv(path):
 
 	return data, entities, attr
 
-
+def normalize_feat(features):
+	features = np.asarray(features)
+	features = scale(features)
+	return features
 
 if __name__ == '__main__':
 	# comments = parse_tokenized_for_labelling("DataSet/organic/tokenized/en.json")

@@ -15,3 +15,17 @@ comment
 comments.csv
 comments-spacy
 comments.txt
+cluster_dicts_10
+cluster_dicts
+FeatureExtrac/hannah-openAI-data-filtered
+FeatureExtrac/CoVe-master/glove.840B.300d.txt
+FeatureExtrac/CoVe-master/Keras_CoVe.h5
+FeatureExtrac/CoVe-master/resources/pytorch_matrices.png
+FeatureExtrac/CoVe-master/resources/pytorch_lstm_math.png
+FeatureExtrac/CoVe-master/resources/keras_lstm_math.png
+FeatureExtrac/CoVe-master/resources/keras_bidirectional_masking_issue.png
+FeatureExtrac/CoVe-master/README.md
+FeatureExtrac/CoVe-master/PortingTest.ipynb
+FeatureExtrac/CoVe-master/PortFromPytorchToKeras.ipynb
+FeatureExtrac/CoVe-master/.ipynb_checkpoints/PortingTest-checkpoint.ipynb
+FeatureExtrac/CoVe-master/.ipynb_checkpoints/PortFromPytorchToKeras-checkpoint.ipynb

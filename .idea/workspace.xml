@@ -12,87 +12,55 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-      <file leaf-file-name="sklearn_pipeline.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sklearn_pipeline.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#2149#2567#0" expanded="false" />
-                <element signature="e#2607#2809#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1881">
-              <caret line="149" column="9" lean-forward="false" selection-start-line="149" selection-start-column="9" selection-end-line="149" selection-end-column="9" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#118#243#0" expanded="false" />
-                <element signature="e#272#1717#0" expanded="false" />
-                <element signature="e#343#704#0" expanded="false" />
-                <element signature="e#726#1714#0" expanded="false" />
-                <element signature="e#1812#2217#0" expanded="false" />
-                <element signature="e#2313#2824#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="preprocess.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DataSet/preprocess.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="61" column="102" lean-forward="false" selection-start-line="61" selection-start-column="102" selection-end-line="61" selection-end-column="102" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-                <element signature="e#174#228#0" expanded="false" />
-                <element signature="e#451#1140#0" expanded="false" />
-                <element signature="e#482#543#0" expanded="false" />
-                <element signature="e#579#644#0" expanded="false" />
-                <element signature="e#688#735#0" expanded="false" />
-                <element signature="e#1276#1759#0" expanded="false" />
-                <element signature="e#1307#1368#0" expanded="false" />
-                <element signature="e#1404#1469#0" expanded="false" />
-                <element signature="e#1513#1560#0" expanded="false" />
-                <element signature="e#1628#1729#0" expanded="false" />
-                <element signature="e#1669#1729#0" expanded="false" />
-                <element signature="e#1761#1808#0" expanded="false" />
-                <element signature="e#2357#2426#0" expanded="false" />
-                <element signature="e#2461#2524#0" expanded="false" />
-                <element signature="e#2719#2728#0" expanded="false" />
-                <element signature="e#3350#3377#0" expanded="false" />
-                <element signature="e#3684#3699#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="multipath_tf_dataset.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Learning/multipath_tf_dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1353">
-              <caret line="144" column="21" lean-forward="false" selection-start-line="144" selection-start-column="9" selection-end-line="144" selection-end-column="21" />
+            <state relative-caret-position="-1187">
+              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
-                <element signature="e#229#1273#0" expanded="false" />
-                <element signature="e#1307#1357#0" expanded="false" />
-                <element signature="e#1398#3839#0" expanded="false" />
-                <element signature="e#3080#3294#0" expanded="false" />
-                <element signature="e#3346#3723#0" expanded="false" />
-                <element signature="e#3842#3906#0" expanded="false" />
-                <element signature="e#5337#5546#0" expanded="false" />
-                <element signature="e#6787#8036#0" expanded="false" />
-                <element signature="e#8299#9145#0" expanded="false" />
-                <element signature="e#10206#11161#0" expanded="false" />
-                <element signature="e#10506#10565#0" expanded="false" />
-                <element signature="e#10587#10867#0" expanded="false" />
-                <element signature="e#10894#10929#0" expanded="false" />
+                <element signature="e#172#1250#0" expanded="false" />
+                <element signature="e#267#944#0" expanded="false" />
+                <element signature="e#336#638#0" expanded="false" />
+                <element signature="e#365#638#0" expanded="false" />
+                <element signature="e#658#917#0" expanded="false" />
+                <element signature="e#674#917#0" expanded="false" />
+                <element signature="e#954#1237#0" expanded="false" />
+                <element signature="e#968#1237#0" expanded="false" />
+                <element signature="e#996#1237#0" expanded="false" />
+                <element signature="e#1284#1334#0" expanded="false" />
+                <element signature="e#1297#1322#0" expanded="false" />
+                <element signature="e#1375#3918#0" expanded="false" />
+                <element signature="e#1775#1845#0" expanded="false" />
+                <element signature="e#1930#2876#0" expanded="false" />
+                <element signature="e#2186#2418#0" expanded="false" />
+                <element signature="e#2473#2876#0" expanded="false" />
+                <element signature="e#2530#2876#0" expanded="false" />
+                <element signature="e#3132#3360#0" expanded="false" />
+                <element signature="e#3412#3802#0" expanded="false" />
+                <element signature="e#3921#3985#0" expanded="false" />
+                <element signature="e#5037#8767#0" expanded="false" />
+                <element signature="e#5272#5482#0" expanded="false" />
+                <element signature="e#5500#5709#0" expanded="false" />
+                <element signature="e#5812#5896#0" expanded="false" />
+                <element signature="e#5923#6244#0" expanded="false" />
+                <element signature="e#6277#6374#0" expanded="false" />
+                <element signature="e#6406#6502#0" expanded="false" />
+                <element signature="e#6516#6596#0" expanded="false" />
+                <element signature="e#6623#6983#0" expanded="false" />
+                <element signature="e#6662#6878#0" expanded="false" />
+                <element signature="e#7765#7911#0" expanded="false" />
+                <element signature="e#8080#8526#0" expanded="false" />
+                <element signature="e#8093#8213#0" expanded="false" />
+                <element signature="e#8232#8389#0" expanded="false" />
+                <element signature="e#9351#9815#0" expanded="false" />
+                <element signature="e#9836#9937#0" expanded="false" />
+                <element signature="e#9989#10386#0" expanded="false" />
+                <element signature="e#10230#10386#0" expanded="false" />
+                <element signature="e#10690#10846#0" expanded="false" />
+                <element signature="e#10876#11831#0" expanded="false" />
+                <element signature="e#11176#11235#0" expanded="false" />
+                <element signature="e#11257#11537#0" expanded="false" />
+                <element signature="e#11564#11599#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -101,18 +69,52 @@
       <file leaf-file-name="config_generator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Learning/config_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="516">
-              <caret line="152" column="30" lean-forward="false" selection-start-line="152" selection-start-column="30" selection-end-line="152" selection-end-column="30" />
+            <state relative-caret-position="627">
+              <caret line="83" column="131" lean-forward="false" selection-start-line="83" selection-start-column="131" selection-end-line="83" selection-end-column="131" />
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
-                <element signature="e#67#179#0" expanded="false" />
-                <element signature="e#202#385#0" expanded="false" />
-                <element signature="e#226#363#0" expanded="false" />
-                <element signature="e#262#363#0" expanded="false" />
-                <element signature="e#505#1145#0" expanded="false" />
-                <element signature="e#1173#1261#0" expanded="false" />
-                <element signature="e#1263#1349#0" expanded="false" />
-                <element signature="e#3400#3411#0" expanded="false" />
+                <element signature="e#190#302#0" expanded="false" />
+                <element signature="e#219#286#0" expanded="false" />
+                <element signature="e#335#666#0" expanded="false" />
+                <element signature="e#359#494#0" expanded="false" />
+                <element signature="e#384#494#0" expanded="false" />
+                <element signature="e#520#655#0" expanded="false" />
+                <element signature="e#545#655#0" expanded="false" />
+                <element signature="e#1628#1752#0" expanded="false" />
+                <element signature="e#1651#1736#0" expanded="false" />
+                <element signature="e#1780#1865#0" expanded="false" />
+                <element signature="e#1803#1849#0" expanded="false" />
+                <element signature="e#1984#2366#0" expanded="false" />
+                <element signature="e#1984#1990#0" expanded="false" />
+                <element signature="e#2325#2363#0" expanded="false" />
+                <element signature="e#2366#2452#0" expanded="false" />
+                <element signature="e#4588#6281#0" expanded="false" />
+                <element signature="e#4976#4987#0" expanded="false" />
+                <element signature="e#6315#7616#0" expanded="false" />
+                <element signature="e#6611#6876#0" expanded="false" />
+                <element signature="e#7135#7564#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="run_organic.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/run_organic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="33">
+              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bag_of_words.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/FeatureExtrac/bag_of_words.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="792">
+              <caret line="35" column="28" lean-forward="false" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#159#474#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -121,8 +123,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="40" column="22" lean-forward="true" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+            <state relative-caret-position="297">
+              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
               </folding>
@@ -130,36 +132,49 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="run_semeval.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/run_semeval.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1254">
+              <caret line="38" column="25" lean-forward="false" selection-start-line="38" selection-start-column="25" selection-end-line="38" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EN_LAPT_SB1_TEST_.xml.gold" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DataSet/semEval/EN_LAPT_SB1_TEST_.xml.gold">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152823">
+              <caret line="4631" column="114" lean-forward="false" selection-start-line="4631" selection-start-column="43" selection-end-line="4631" selection-end-column="114" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="dataset_pipelines.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DataSet/dataset_pipelines.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1353">
-              <caret line="87" column="2" lean-forward="false" selection-start-line="87" selection-start-column="2" selection-end-line="87" selection-end-column="2" />
+            <state relative-caret-position="891">
+              <caret line="180" column="2" lean-forward="false" selection-start-line="180" selection-start-column="2" selection-end-line="180" selection-end-column="2" />
               <folding>
-                <element signature="e#343#714#0" expanded="false" />
-                <element signature="e#724#1094#0" expanded="false" />
-                <element signature="e#1562#2149#0" expanded="false" />
-                <element signature="e#1591#1666#0" expanded="false" />
-                <element signature="e#1708#1872#0" expanded="false" />
-                <element signature="e#2159#2617#0" expanded="false" />
-                <element signature="e#2260#2382#0" expanded="false" />
-                <element signature="e#2441#2588#0" expanded="false" />
-                <element signature="e#3686#6324#0" expanded="false" />
-                <element signature="e#3857#4223#0" expanded="false" />
-                <element signature="e#3892#3999#0" expanded="false" />
-                <element signature="e#3948#3999#0" expanded="false" />
-                <element signature="e#4033#4128#0" expanded="false" />
-                <element signature="e#4083#4128#0" expanded="false" />
-                <element signature="e#4233#4765#0" expanded="false" />
-                <element signature="e#4268#4409#0" expanded="false" />
-                <element signature="e#4298#4409#0" expanded="false" />
-                <element signature="e#4357#4409#0" expanded="false" />
-                <element signature="e#4443#4572#0" expanded="false" />
-                <element signature="e#4473#4572#0" expanded="false" />
-                <element signature="e#4526#4572#0" expanded="false" />
-                <element signature="e#4995#5134#0" expanded="false" />
-                <element signature="e#5144#5375#0" expanded="false" />
-                <element signature="e#5189#5264#0" expanded="false" />
+                <element signature="e#0#30#0" expanded="true" />
+                <element signature="e#391#4090#0" expanded="false" />
+                <element signature="e#423#794#0" expanded="false" />
+                <element signature="e#1642#2229#0" expanded="false" />
+                <element signature="e#1671#1746#0" expanded="false" />
+                <element signature="e#1788#1952#0" expanded="false" />
+                <element signature="e#2239#2697#0" expanded="false" />
+                <element signature="e#2340#2462#0" expanded="false" />
+                <element signature="e#2521#2668#0" expanded="false" />
+                <element signature="e#4387#4753#0" expanded="false" />
+                <element signature="e#4763#5295#0" expanded="false" />
+                <element signature="e#5343#5625#0" expanded="false" />
+                <element signature="e#5798#5811#0" expanded="false" />
+                <element signature="e#6254#6465#0" expanded="false" />
+                <element signature="e#6475#6668#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -176,18 +191,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>music/</find>
-      <find>light</find>
-      <find>walmart</find>
-      <find>wal - mart</find>
-      <find>hmm</find>
-      <find>rel</find>
-      <find>confusion</find>
-      <find>organic vall</find>
-      <find>highly a</find>
-      <find>i could see</find>
-      <find>pdfs</find>
-      <find>train</find>
       <find>wal -</find>
       <find>I believe voluntary labeling schemes provide better quality information</find>
       <find>data_len</find>
@@ -206,6 +209,18 @@
       <find>In the end our check came to $27 for 4 small pancakes</find>
       <find>input_</find>
       <find>config</find>
+      <find>area has an abbreviated</find>
+      <find>If your looking for real q</find>
+      <find>nifty take out box and with so</find>
+      <find>should be larger (at least 8&quot;) to justify the</find>
+      <find>really</find>
+      <find>ds_dict3</find>
+      <find>monsa</find>
+      <find>glyphosate</find>
+      <find>org_dict</find>
+      <find>lad I did so fa</find>
+      <find>is bright and vibrant the OS so unusable for work, I have moved back to</find>
+      <find>feed_dict</find>
     </findStrings>
     <replaceStrings>
       <replace>Y[j, 2}</replace>
@@ -215,6 +230,9 @@
       <replace>'</replace>
       <replace>length</replace>
       <replace>configuration</replace>
+      <replace>org_dict</replace>
+      <replace>ds_dict4</replace>
+      <replace>ds_dict3</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -235,23 +253,28 @@
         <option value="$PROJECT_DIR$/Learning/Tf_neural_net.py" />
         <option value="$PROJECT_DIR$/Learning/tf_construct.py" />
         <option value="$PROJECT_DIR$/Learning/tf_multiPath.py" />
-        <option value="$PROJECT_DIR$/__init__.py" />
         <option value="$PROJECT_DIR$/depend/openAI/encoder.py" />
         <option value="$PROJECT_DIR$/aspect_extraction.py" />
         <option value="$PROJECT_DIR$/DataSet/semEval/EN_LAPT_SB1_TEST_.xml.gold" />
-        <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/DataSet/preprocess.py" />
+        <option value="$PROJECT_DIR$/FeatureExtrac/CoVe-master/cove_transform.py" />
+        <option value="$PROJECT_DIR$/__init__.py" />
+        <option value="$PROJECT_DIR$/FeatureExtrac/bag_of words.py" />
+        <option value="$PROJECT_DIR$/FeatureExtrac/bag_of_words.py" />
         <option value="$PROJECT_DIR$/sklearn_pipeline.py" />
         <option value="$PROJECT_DIR$/DataSet/dataset_pipelines.py" />
-        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/Learning/multipath_tf_dataset.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/run_organic.py" />
+        <option value="$PROJECT_DIR$/run_semeval.py" />
         <option value="$PROJECT_DIR$/Learning/config_generator.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-11" />
-    <option name="width" value="2535" />
+    <option name="width" value="3115" />
     <option name="height" value="2461" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -289,6 +312,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -298,20 +322,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Sentiment-analysis-code" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Sentiment-analysis-code" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Sentiment-analysis-code" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Learning" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -343,10 +353,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sentiment-analysis-code" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sentiment-analysis-code" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataSet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="semEval" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -371,7 +398,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.config_generator">
+  <component name="RunManager" selected="Python.run_semeval">
     <configuration default="false" name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -390,25 +417,25 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="bag_of words" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FeatureExtrac" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Sentiment-analysis-code" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Ayad\Desktop\Academic\NLP\sA\Sentiment-analysis-code\FeatureExtrac\bag_of_words.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="sklearn_pipeline" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="__init__" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -420,7 +447,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Sentiment-analysis-code" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sklearn_pipeline.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/__init__.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -444,19 +471,19 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="config_generator" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="run_semeval" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Learning" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Sentiment-analysis-code" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Learning/config_generator.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run_semeval.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -528,18 +555,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.main" />
-      <item index="1" class="java.lang.String" itemvalue="Python.utils" />
-      <item index="2" class="java.lang.String" itemvalue="Python.sklearn_pipeline" />
+      <item index="1" class="java.lang.String" itemvalue="Python.bag_of words" />
+      <item index="2" class="java.lang.String" itemvalue="Python.__init__" />
       <item index="3" class="java.lang.String" itemvalue="Python.dataset_pipelines" />
-      <item index="4" class="java.lang.String" itemvalue="Python.config_generator" />
+      <item index="4" class="java.lang.String" itemvalue="Python.run_semeval" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.config_generator" />
+        <item index="0" class="java.lang.String" itemvalue="Python.run_semeval" />
         <item index="1" class="java.lang.String" itemvalue="Python.main" />
-        <item index="2" class="java.lang.String" itemvalue="Python.dataset_pipelines" />
-        <item index="3" class="java.lang.String" itemvalue="Python.utils" />
-        <item index="4" class="java.lang.String" itemvalue="Python.sklearn_pipeline" />
+        <item index="2" class="java.lang.String" itemvalue="Python.bag_of words" />
+        <item index="3" class="java.lang.String" itemvalue="Python.dataset_pipelines" />
+        <item index="4" class="java.lang.String" itemvalue="Python.__init__" />
       </list>
     </recent_temporary>
   </component>
@@ -557,15 +584,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="0" width="2535" height="2461" extended-state="0" />
+    <frame x="-11" y="0" width="3115" height="2461" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18757467" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1546425" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26910016" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38242784" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -576,62 +603,40 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30037174" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3000849" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2872969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07265625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3000849" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3992565" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="38" />
+      <option name="time" value="48" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/visual.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1428">
-          <caret line="34" column="18" lean-forward="true" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FeatureExtrac/manual_features.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/semEval/SemEval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3774">
-          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4131">
-          <caret line="120" column="10" lean-forward="false" selection-start-line="120" selection-start-column="9" selection-end-line="120" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -751,13 +756,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DataSet/SemEval.py" />
     <entry file="file://$PROJECT_DIR$/Learning/main.py" />
-    <entry file="file://$PROJECT_DIR$/FeatureExtrac/manual_features.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/site-packages/tensorflow/python/layers/base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2962">
@@ -769,13 +767,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="704">
           <caret line="786" column="0" lean-forward="false" selection-start-line="786" selection-start-column="0" selection-end-line="786" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FeatureExtrac/autoencoder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
-          <caret line="26" column="27" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -800,24 +791,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/semEval/SemEval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1394">
-          <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/visual.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="11" column="14" lean-forward="false" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aspect_extraction.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="6" selection-end-column="75" />
         </state>
       </provider>
     </entry>
@@ -842,48 +819,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/organic/comments_PB3.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1560">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1881">
-          <caret line="149" column="9" lean-forward="false" selection-start-line="149" selection-start-column="9" selection-end-line="149" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#118#243#0" expanded="false" />
-            <element signature="e#272#1717#0" expanded="false" />
-            <element signature="e#343#704#0" expanded="false" />
-            <element signature="e#726#1714#0" expanded="false" />
-            <element signature="e#1812#2217#0" expanded="false" />
-            <element signature="e#2313#2824#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FeatureExtrac/openAI_transfrom.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/DataSet/organic/comments_PB3.csv" />
     <entry file="file://$PROJECT_DIR$/DataSet/semEval/ABSA16_Laptops_Train_SB1_v2.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="74">
           <caret line="9039" column="55" lean-forward="false" selection-start-line="9039" selection-start-column="55" selection-end-line="9039" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/semEval/EN_LAPT_SB1_TEST_.xml.gold">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5280">
-          <caret line="264" column="33" lean-forward="false" selection-start-line="264" selection-start-column="29" selection-end-line="264" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -894,104 +834,208 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/__init__.py">
+    <entry file="file://$PROJECT_DIR$/DataSet/semEval/SemEval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="43" lean-forward="false" selection-start-line="5" selection-start-column="43" selection-end-line="5" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sklearn_pipeline.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#2149#2567#0" expanded="false" />
-            <element signature="e#2607#2809#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="61" column="102" lean-forward="false" selection-start-line="61" selection-start-column="102" selection-end-line="61" selection-end-column="102" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#174#228#0" expanded="false" />
-            <element signature="e#451#1140#0" expanded="false" />
-            <element signature="e#482#543#0" expanded="false" />
-            <element signature="e#579#644#0" expanded="false" />
-            <element signature="e#688#735#0" expanded="false" />
-            <element signature="e#1276#1759#0" expanded="false" />
-            <element signature="e#1307#1368#0" expanded="false" />
-            <element signature="e#1404#1469#0" expanded="false" />
-            <element signature="e#1513#1560#0" expanded="false" />
-            <element signature="e#1628#1729#0" expanded="false" />
-            <element signature="e#1669#1729#0" expanded="false" />
-            <element signature="e#1761#1808#0" expanded="false" />
-            <element signature="e#2357#2426#0" expanded="false" />
-            <element signature="e#2461#2524#0" expanded="false" />
-            <element signature="e#2719#2728#0" expanded="false" />
-            <element signature="e#3350#3377#0" expanded="false" />
-            <element signature="e#3684#3699#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataSet/semEval/ABSA16_Restaurants_Train_SB1_v2.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-600">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="966">
+          <caret line="85" column="0" lean-forward="false" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DataSet/semEval/EN_REST_SB1_TEST.xml.gold">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="4381" column="75" lean-forward="false" selection-start-line="4381" selection-start-column="22" selection-end-line="4381" selection-end-column="75" />
+        <state relative-caret-position="326">
+          <caret line="3513" column="75" lean-forward="false" selection-start-line="3513" selection-start-column="45" selection-end-line="3513" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataSet/semEval/ABSA16_Restaurants_Train_SB1_v2.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FeatureExtrac/CoVe-master/glove.840B.300d.txt">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="700">
+          <caret line="35" column="86" lean-forward="false" selection-start-line="35" selection-start-column="86" selection-end-line="35" selection-end-column="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FeatureExtrac/autoencoder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="26" column="27" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FeatureExtrac/CoVe-master/cove_transform.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="760">
+          <caret line="41" column="21" lean-forward="false" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataSet/preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2310">
+          <caret line="134" column="13" lean-forward="false" selection-start-line="134" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#13#0" expanded="false" />
+            <element signature="e#174#228#0" expanded="false" />
+            <element signature="e#451#1140#0" expanded="false" />
+            <element signature="e#482#543#0" expanded="false" />
+            <element signature="e#579#644#0" expanded="false" />
+            <element signature="e#688#735#0" expanded="false" />
+            <element signature="e#1276#1882#0" expanded="false" />
+            <element signature="e#1307#1368#0" expanded="false" />
+            <element signature="e#1404#1469#0" expanded="false" />
+            <element signature="e#1513#1560#0" expanded="false" />
+            <element signature="e#1884#1931#0" expanded="false" />
+            <element signature="e#2480#2549#0" expanded="false" />
+            <element signature="e#2584#2647#0" expanded="false" />
+            <element signature="e#2842#2851#0" expanded="false" />
+            <element signature="e#3474#3501#0" expanded="false" />
+            <element signature="e#3808#3823#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FeatureExtrac/openAI_transfrom.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="13" column="33" lean-forward="false" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/site-packages/sklearn/utils/validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="203" column="0" lean-forward="false" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aspect_extraction.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="6" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FeatureExtrac/manual_features.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="6" column="20" lean-forward="false" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#29#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sklearn_pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="false" />
+            <element signature="e#2105#2523#0" expanded="false" />
+            <element signature="e#2563#2765#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DataSet/dataset_pipelines.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1353">
-          <caret line="87" column="2" lean-forward="false" selection-start-line="87" selection-start-column="2" selection-end-line="87" selection-end-column="2" />
+        <state relative-caret-position="891">
+          <caret line="180" column="2" lean-forward="false" selection-start-line="180" selection-start-column="2" selection-end-line="180" selection-end-column="2" />
           <folding>
-            <element signature="e#343#714#0" expanded="false" />
-            <element signature="e#724#1094#0" expanded="false" />
-            <element signature="e#1562#2149#0" expanded="false" />
-            <element signature="e#1591#1666#0" expanded="false" />
-            <element signature="e#1708#1872#0" expanded="false" />
-            <element signature="e#2159#2617#0" expanded="false" />
-            <element signature="e#2260#2382#0" expanded="false" />
-            <element signature="e#2441#2588#0" expanded="false" />
-            <element signature="e#3686#6324#0" expanded="false" />
-            <element signature="e#3857#4223#0" expanded="false" />
-            <element signature="e#3892#3999#0" expanded="false" />
-            <element signature="e#3948#3999#0" expanded="false" />
-            <element signature="e#4033#4128#0" expanded="false" />
-            <element signature="e#4083#4128#0" expanded="false" />
-            <element signature="e#4233#4765#0" expanded="false" />
-            <element signature="e#4268#4409#0" expanded="false" />
-            <element signature="e#4298#4409#0" expanded="false" />
-            <element signature="e#4357#4409#0" expanded="false" />
-            <element signature="e#4443#4572#0" expanded="false" />
-            <element signature="e#4473#4572#0" expanded="false" />
-            <element signature="e#4526#4572#0" expanded="false" />
-            <element signature="e#4995#5134#0" expanded="false" />
-            <element signature="e#5144#5375#0" expanded="false" />
-            <element signature="e#5189#5264#0" expanded="false" />
+            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#391#4090#0" expanded="false" />
+            <element signature="e#423#794#0" expanded="false" />
+            <element signature="e#1642#2229#0" expanded="false" />
+            <element signature="e#1671#1746#0" expanded="false" />
+            <element signature="e#1788#1952#0" expanded="false" />
+            <element signature="e#2239#2697#0" expanded="false" />
+            <element signature="e#2340#2462#0" expanded="false" />
+            <element signature="e#2521#2668#0" expanded="false" />
+            <element signature="e#4387#4753#0" expanded="false" />
+            <element signature="e#4763#5295#0" expanded="false" />
+            <element signature="e#5343#5625#0" expanded="false" />
+            <element signature="e#5798#5811#0" expanded="false" />
+            <element signature="e#6254#6465#0" expanded="false" />
+            <element signature="e#6475#6668#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FeatureExtrac/bag_of_words.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="792">
+          <caret line="35" column="28" lean-forward="false" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#159#474#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-572">
+          <caret line="90" column="70" lean-forward="false" selection-start-line="90" selection-start-column="70" selection-end-line="90" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#201#326#0" expanded="false" />
+            <element signature="e#426#787#0" expanded="false" />
+            <element signature="e#809#1797#0" expanded="false" />
+            <element signature="e#1872#2757#0" expanded="false" />
+            <element signature="e#2831#3552#0" expanded="false" />
+            <element signature="e#3647#4052#0" expanded="false" />
+            <element signature="e#4693#5164#0" expanded="false" />
+            <element signature="e#5195#6177#0" expanded="false" />
+            <element signature="e#6210#6286#0" expanded="false" />
+            <marker date="1520596268787" expanded="false" signature="352:1797" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataSet/semEval/EN_LAPT_SB1_TEST_.xml.gold">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152823">
+          <caret line="4631" column="114" lean-forward="false" selection-start-line="4631" selection-start-column="43" selection-end-line="4631" selection-end-column="114" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="40" column="22" lean-forward="true" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+        <state relative-caret-position="297">
+          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run_organic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="33">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run_semeval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1254">
+          <caret line="38" column="25" lean-forward="false" selection-start-line="38" selection-start-column="25" selection-end-line="38" selection-end-column="25" />
           <folding>
             <element signature="e#0#43#0" expanded="true" />
           </folding>
@@ -1000,41 +1044,81 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Learning/config_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="516">
-          <caret line="152" column="30" lean-forward="false" selection-start-line="152" selection-start-column="30" selection-end-line="152" selection-end-column="30" />
+        <state relative-caret-position="627">
+          <caret line="83" column="131" lean-forward="false" selection-start-line="83" selection-start-column="131" selection-end-line="83" selection-end-column="131" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <element signature="e#67#179#0" expanded="false" />
-            <element signature="e#202#385#0" expanded="false" />
-            <element signature="e#226#363#0" expanded="false" />
-            <element signature="e#262#363#0" expanded="false" />
-            <element signature="e#505#1145#0" expanded="false" />
-            <element signature="e#1173#1261#0" expanded="false" />
-            <element signature="e#1263#1349#0" expanded="false" />
-            <element signature="e#3400#3411#0" expanded="false" />
+            <element signature="e#190#302#0" expanded="false" />
+            <element signature="e#219#286#0" expanded="false" />
+            <element signature="e#335#666#0" expanded="false" />
+            <element signature="e#359#494#0" expanded="false" />
+            <element signature="e#384#494#0" expanded="false" />
+            <element signature="e#520#655#0" expanded="false" />
+            <element signature="e#545#655#0" expanded="false" />
+            <element signature="e#1628#1752#0" expanded="false" />
+            <element signature="e#1651#1736#0" expanded="false" />
+            <element signature="e#1780#1865#0" expanded="false" />
+            <element signature="e#1803#1849#0" expanded="false" />
+            <element signature="e#1984#2366#0" expanded="false" />
+            <element signature="e#1984#1990#0" expanded="false" />
+            <element signature="e#2325#2363#0" expanded="false" />
+            <element signature="e#2366#2452#0" expanded="false" />
+            <element signature="e#4588#6281#0" expanded="false" />
+            <element signature="e#4976#4987#0" expanded="false" />
+            <element signature="e#6315#7616#0" expanded="false" />
+            <element signature="e#6611#6876#0" expanded="false" />
+            <element signature="e#7135#7564#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Learning/multipath_tf_dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1353">
-          <caret line="144" column="21" lean-forward="false" selection-start-line="144" selection-start-column="9" selection-end-line="144" selection-end-column="21" />
+        <state relative-caret-position="-1187">
+          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <element signature="e#229#1273#0" expanded="false" />
-            <element signature="e#1307#1357#0" expanded="false" />
-            <element signature="e#1398#3839#0" expanded="false" />
-            <element signature="e#3080#3294#0" expanded="false" />
-            <element signature="e#3346#3723#0" expanded="false" />
-            <element signature="e#3842#3906#0" expanded="false" />
-            <element signature="e#5337#5546#0" expanded="false" />
-            <element signature="e#6787#8036#0" expanded="false" />
-            <element signature="e#8299#9145#0" expanded="false" />
-            <element signature="e#10206#11161#0" expanded="false" />
-            <element signature="e#10506#10565#0" expanded="false" />
-            <element signature="e#10587#10867#0" expanded="false" />
-            <element signature="e#10894#10929#0" expanded="false" />
+            <element signature="e#172#1250#0" expanded="false" />
+            <element signature="e#267#944#0" expanded="false" />
+            <element signature="e#336#638#0" expanded="false" />
+            <element signature="e#365#638#0" expanded="false" />
+            <element signature="e#658#917#0" expanded="false" />
+            <element signature="e#674#917#0" expanded="false" />
+            <element signature="e#954#1237#0" expanded="false" />
+            <element signature="e#968#1237#0" expanded="false" />
+            <element signature="e#996#1237#0" expanded="false" />
+            <element signature="e#1284#1334#0" expanded="false" />
+            <element signature="e#1297#1322#0" expanded="false" />
+            <element signature="e#1375#3918#0" expanded="false" />
+            <element signature="e#1775#1845#0" expanded="false" />
+            <element signature="e#1930#2876#0" expanded="false" />
+            <element signature="e#2186#2418#0" expanded="false" />
+            <element signature="e#2473#2876#0" expanded="false" />
+            <element signature="e#2530#2876#0" expanded="false" />
+            <element signature="e#3132#3360#0" expanded="false" />
+            <element signature="e#3412#3802#0" expanded="false" />
+            <element signature="e#3921#3985#0" expanded="false" />
+            <element signature="e#5037#8767#0" expanded="false" />
+            <element signature="e#5272#5482#0" expanded="false" />
+            <element signature="e#5500#5709#0" expanded="false" />
+            <element signature="e#5812#5896#0" expanded="false" />
+            <element signature="e#5923#6244#0" expanded="false" />
+            <element signature="e#6277#6374#0" expanded="false" />
+            <element signature="e#6406#6502#0" expanded="false" />
+            <element signature="e#6516#6596#0" expanded="false" />
+            <element signature="e#6623#6983#0" expanded="false" />
+            <element signature="e#6662#6878#0" expanded="false" />
+            <element signature="e#7765#7911#0" expanded="false" />
+            <element signature="e#8080#8526#0" expanded="false" />
+            <element signature="e#8093#8213#0" expanded="false" />
+            <element signature="e#8232#8389#0" expanded="false" />
+            <element signature="e#9351#9815#0" expanded="false" />
+            <element signature="e#9836#9937#0" expanded="false" />
+            <element signature="e#9989#10386#0" expanded="false" />
+            <element signature="e#10230#10386#0" expanded="false" />
+            <element signature="e#10690#10846#0" expanded="false" />
+            <element signature="e#10876#11831#0" expanded="false" />
+            <element signature="e#11176#11235#0" expanded="false" />
+            <element signature="e#11257#11537#0" expanded="false" />
+            <element signature="e#11564#11599#0" expanded="false" />
           </folding>
         </state>
       </provider>

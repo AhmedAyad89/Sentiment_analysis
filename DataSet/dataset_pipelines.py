@@ -1,10 +1,10 @@
 from DataSet import preprocess
 import pickle
 from FeatureExtrac.openAI_transfrom import openAI_transform
+from FeatureExtrac.bag_of_words import *
 from utils import  *
 from itertools import compress
-
-
+from FeatureExtrac.bag_of_words import *
 #subtask  = [aspect, sentiment, both]
 def SemEvalPipe(data='Laptop', subtask = [True, True, True], test = True, single_label = True, one_hot= True  ):
 	datasets=[]
@@ -82,9 +82,24 @@ def SemEvalPipe(data='Laptop', subtask = [True, True, True], test = True, single
 	except:
 		test_vecs = openAI_transform(test_data, dmp_name='FeatureExtrac//semeval' + data + '_test-openAI-data')
 
-	train_labels = [list(compress(x, subtask)) for x in train_labels]
-	test_labels =  [list(compress(i, subtask)) for i in test_labels]
-
+	if single_label:
+		train_labels = [list(compress(x, subtask)) for x in train_labels]
+		test_labels =  [list(compress(i, subtask)) for i in test_labels]
+	else:
+		new_test=[]
+		for i, entry in enumerate(test_labels):
+			tmp=[]
+			for a in entry:
+				tmp.append(list(compress(a, subtask)))
+			new_test.append(tmp)
+		new_train=[]
+		for i, entry in enumerate(train_labels):
+			tmp=[]
+			for a in entry:
+				tmp.append(list(compress(a, subtask)))
+			new_train.append(tmp)
+		train_labels =new_train
+		test_labels =new_test
 	dict = {}
 	dict['train_data'] = train_data
 	dict['train_labels'] = train_labels
@@ -99,10 +114,11 @@ def SemEvalPipe(data='Laptop', subtask = [True, True, True], test = True, single
 	return dict
 
 		
-def Hannah_pipe(train_cutoff = 8000, single=True):
+def Hannah_pipe(train_cutoff = 700, single=True, rel_filter =True, bow_clusters=True, scheme=[True, True] ):
 	
 	entity_dict, attr_dict = parse_hannah_legend('DataSet//organic//legend.csv')
-	data, entities, attr = parse_hannah_csv('DataSet//organic//comments_PB3.csv')
+	data, entities, attr = parse_hannah_csv('DataSet//organic//19-03-05_comments_HD.csv')
+
 
 	if single:
 		for i,e in enumerate(entities):
@@ -145,31 +161,58 @@ def Hannah_pipe(train_cutoff = 8000, single=True):
 			new.append([list(x) for x in labels[i]])
 		labels=new
 
-	encoded_labels, encoder, labeling = preprocess.encode_labels(labels = labels, scheme=[True, True], one_hot=False )
-	inverted_labels= encoded_labels# label_encoder.inverse_transform(encoded_labels)
+	new_data=[]
+	new_labels=[]
+	if rel_filter:
+		for i in range(len(data)):
+			if labels[i] == ['not relevant', 'not relevant']:
+				continue
+			if labels[i] == ['relevant', 'relevant']:
+				continue
+			new_data.append(data[i])
+			new_labels.append(labels[i])
+		data = new_data
+		labels = new_labels
+		print('remaining', len(data))
+	encoded_labels, encoder, labeling = preprocess.encode_labels(labels = labels, scheme=scheme, one_hot=True )
+	inverted_labels= encoder.inverse_transform(encoded_labels)
+
 
 	#sanity check
-	if single:
-		for i in range(len(data)):
-			# print(data[i], labels[i], labeling[inverted_labels[i]])
-			assert labeling[inverted_labels[i]] == labels[i]
-	else:
-		reoriginal=[]
-		for i in inverted_labels:
-			tmp=[]
-			for e in i:
-				tmp.append(labeling[e])
-			reoriginal.append(tmp)
-		for i in range(len(data)):
-			for j in range(len(labels[i])):
-				assert list(labels[i][j]) in reoriginal[i]
+	# if single:
+	# 	for i in range(len(data)):
+	# 		# print(data[i], labels[i], labeling[inverted_labels[i]])
+	# 		assert labeling[inverted_labels[i]] == labels[i]
+	# else:
+	# 	reoriginal=[]
+	# 	for i in inverted_labels:
+	# 		tmp=[]
+	# 		for e in i:
+	# 			tmp.append(labeling[e])
+	# 		reoriginal.append(tmp)
+	# 	for i in range(len(data)):
+	# 		for j in range(len(labels[i])):
+	# 			assert list(labels[i][j]) in reoriginal[i]
 
-	try:
-		with open("FeatureExtrac//hannah-openAI-data", 'rb') as fp:
-			data_vecs = pickle.load(fp)
-	except:
-		data_vecs = openAI_transform(data, dmp_name="FeatureExtrac//hannah-openAI-data")
-	
+	if rel_filter:
+		try:
+			with open("FeatureExtrac//hannah-openAI-data-filtered", 'rb') as fp:
+				data_vecs = pickle.load(fp)
+		except:
+			data_vecs = openAI_transform(data, dmp_name="FeatureExtrac//hannah-openAI-data-filtered")
+	else:
+		try:
+			with open("FeatureExtrac//hannah-openAI-data", 'rb') as fp:
+				data_vecs = pickle.load(fp)
+		except:
+			data_vecs = openAI_transform(data, dmp_name="FeatureExtrac//hannah-openAI-data")
+
+	if bow_clusters:
+		features = bow_clusters_features(data = data)
+		data_vecs = np.concatenate((data_vecs, features), axis=1)
+
+	print(len(data_vecs[0]))
+
 	print(len(data_vecs))
 	test_vecs = data_vecs[train_cutoff:]
 	train_vecs = data_vecs[:train_cutoff]
@@ -178,7 +221,7 @@ def Hannah_pipe(train_cutoff = 8000, single=True):
 	test_data = data[train_cutoff:]
 	train_data = data[:train_cutoff]
 	train_labels = labels[:train_cutoff]
-	test_labels = labels[:train_cutoff]
+	test_labels = labels[train_cutoff:]
 
 	dict = {}
 	name= 'organic'

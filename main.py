@@ -10,68 +10,70 @@ from sklearn import metrics, preprocessing
 from Learning.config_generator import *
 
 
-ds_dict = SemEvalPipe(data='Restaurant', subtask=[True, False, False])
-ds_dict2 = SemEvalPipe(single_label=True,data='Restaurant', subtask=[False, True, False])
+
+org_dict = Hannah_pipe(scheme=[False, True])
 datasets=[]
 
 
-print(len(ds_dict['encoded_train_labels'][0]))
-print(len(ds_dict2['encoded_train_labels'][0]))
 
-dataset={}
-dataset['name'] = 'semeval_laptops'
-# dataset['holdout'] = 200
-dataset['features'] = ds_dict['train_vecs']
-dataset['type'] = tf.float32
-dataset['tasks'] = [{'name' : 'entities', 'features' : ds_dict['encoded_train_labels'], 'type': tf.float32 }
-										,{'name' : 'attributes', 'features' : ds_dict2['encoded_train_labels'], 'type': tf.float32 } ]
 
-# dataset={}
-# dataset['name'] = 'hannah_organic'
-# dataset['features'] = data_vecs
-# dataset['type'] = tf.float32
-# dataset['tasks'] = [{'name' : 'aspects', 'features' : aspect_labels, 'type': tf.float32 }]
+print(len(org_dict['encoded_train_labels'][0]))
+
+
+# supervised(org_dict['train_data'], org_dict['train_vecs'], org_dict['encoded_train_labels'],
+# 					 org_dict['test_vecs'], org_dict['encoded_test_labels'] )
+
+# single_train = []
+# single_test = []
+# for l in ds_dict3['encoded_train_labels']:
+# 	if np.linalg.norm(l, ord=0) == 0:
+# 		n = np.concatenate([l, [1]])
+# 		single_train.append(n)
+# 	else:
+# 		n =  l / np.linalg.norm(l, ord=0)
+# 		n = np.concatenate([n, [0]])
+# 		single_train.append(n)
+# #
+# for i in range(10):
+# 	print(single_train)
+
+# for l in ds_dict3['encoded_test_labels']:
+# 	single_test.append( l / np.linalg.norm(l, ord=0) )
 #
-datasets.append(dataset)
 
-test_labels = ds_dict['test_labels']
-test_data = ds_dict['test_data']
-entity_labeling = ds_dict['labeling']
-attribute_labeling = ds_dict2['labeling']
-paths = config_graph()
-params={}
-params['train_iter'] = 800
-M = TfMultiPathClassifier(datasets, paths, params)
 
-M.save()
-M.train()
 
-x = M.get_prediciton('entities', ds_dict['test_vecs'])
-i = M.get_prediciton('attributes', ds_dict['test_vecs'])
-pred_labels = np.stack((x,i),1)
-
-x = ds_dict['label_encoder'].transform(x)
-i = ds_dict2['label_encoder'].transform(i)
-
-pred = np.concatenate((x,i),1)
-l = np.concatenate((ds_dict['encoded_test_labels'], ds_dict2['encoded_test_labels']), 1)
-
+x =input()
+# pred = [y[:-1] for y in x]
+# pred = np.asarray(pred, dtype=np.int32)
+pred = x
+l = org_dict['encoded_test_labels']
+# print(pred[0], l[0])
+# print(len(pred[0]))
 try:
 	print('micro', metrics.f1_score(l, pred, average='micro'))
-	print('macro', metrics.f1_score(l, pred, average='macro'))
-	print('weight', metrics.f1_score(l, pred, average='weighted'))
-except:
-	print('x')
-print('samples', metrics.f1_score(l, pred, average='samples'))
+	# print('macro', metrics.f1_score(l, pred, average='macro'))
+	# print('weight', metrics.f1_score(l, pred, average='weighted'))
+except Exception as e:
+	print(e)
+print('f1 samples', metrics.f1_score(l, pred, average='samples'))
+print('precision samples', metrics.precision_score(l, pred, average='samples'))
+print('recall samples', metrics.recall_score(l, pred, average='samples'))
 
-
+xp = np.where(x == 1)
 counter = 0
 for i in range(len(test_labels)):
 	# if x[i] == 0 and test_labels[i] == 0:
 	# 	continue
 	print(i, '- ', test_data[i])#, test_aspect_labels[i], '\n',x[i])
-	print(entity_labeling[pred_labels[i][0]], attribute_labeling[pred_labels[i][1]] )
-	print(ds_dict['test_labels'][i], ds_dict2['test_labels'][i])
+	try:
+		if(xp[i] == 88):
+			print('NA')
+		else:
+			print([aspect_labeling[entry] for entry in xp[i]])
+	except:
+		print((aspect_labeling[xp[i]]))
+	print(org_dict['test_labels'][i])
 	#print(y[i][test_aspect_labels[i]])
 	counter += 1
 	print('\n', '\n--------------------------\n')
