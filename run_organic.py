@@ -6,35 +6,46 @@ import numpy as np
 from DataSet.dataset_pipelines import *
 from Learning.config_generator import *
 
-org_dict = Hannah_pipe(scheme=[False, True])
+entity_dict = Hannah_pipe(single=False, rel_filter=True, scheme=[True, False], bow_clusters=True, merged_attr=True, merged_ent=False, entity_pred=True, train_cutoff=700)
+attr_dict = Hannah_pipe(single=False, rel_filter=True, scheme=[True, True], bow_clusters=True, merged_attr=True,  train_cutoff=700, entity_pred=True, attr_pred=True)
+
+
 datasets=[]
 
-print(len(org_dict['encoded_train_labels'][0]))
+print(len(entity_dict['encoded_train_labels'][0]))
+
+
 
 dataset={}
 dataset['name'] = 'hannah_organic'
-dataset['batch_size'] = 100
-dataset['features'] = org_dict['train_vecs']
+dataset['holdout'] = 50
+dataset['batch_size'] = 450
+dataset['features'] = attr_dict['train_vecs']
 dataset['type'] = tf.float32
-dataset['tasks'] = [{'name' : 'aspects', 'features' : org_dict['encoded_train_labels'], 'type': tf.float32 }]
+dataset['tasks'] = [{'name' : 'entities', 'features' : attr_dict['encoded_train_labels'], 'type': tf.float32 }]
+								
 datasets.append(dataset)
 
 
-test_labels = org_dict['test_labels']
-test_data = org_dict['test_data']
-# entity_labeling = ds_dict['labeling']
-# attribute_labeling = ds_dict2['labeling']
-aspect_labeling = org_dict['labeling']
-
-paths = config_single_graph()
+paths = config_organic_graph()
 params={}
-params['train_iter'] = 2000
-M = TfMultiPathClassifier(datasets, paths, params)
+params['train_iter'] = 1500
+M = TfMultiPathClassifier(datasets,  paths, params)
 
 M.save()
 M.train()
 
-x = M.get_prediciton('aspects', org_dict['test_vecs'])
-y = M.get_prediciton('aspects', org_dict['train_vecs'])
-single_label_metrics(y, org_dict['train_labels'], org_dict['encoded_train_labels'], org_dict['labeling'], org_dict['train_data'])
-single_label_metrics(x, org_dict['test_labels'], org_dict['encoded_test_labels'], org_dict['labeling'], org_dict['test_data'])
+x = M.get_prediciton('entities', attr_dict['test_vecs'])
+y = M.get_prediciton('entities', attr_dict['train_vecs'])
+multi_label_metrics(y, attr_dict['train_labels'], attr_dict['encoded_train_labels'], attr_dict['labeling'], attr_dict['train_data'])
+multi_label_metrics(x, attr_dict['test_labels'], attr_dict['encoded_test_labels'], attr_dict['labeling'], attr_dict['test_data'], mute=False)
+
+#
+# x = M.get_raw_prediciton('entities', attr_dict['test_vecs'])
+# y = M.get_raw_prediciton('entities', attr_dict['train_vecs'])
+#
+# with open('org_attrs_train_predictions_5', 'wb') as fp:
+# 	pickle.dump(y,fp)
+# with open('org_attrs_test_predictions_5', 'wb') as fp:
+# 	pickle.dump(x,fp)
+

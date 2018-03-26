@@ -13,6 +13,7 @@ def dataset_generator(dataset, holdout=None):
 		def train_gen():
 			for i in range (length):
 				if(i in p):
+					# print(i)
 					continue
 				labels = [ x['features'][i] for x in  dataset['tasks'] ]
 				if(isinstance(dataset['features'][i], str)):
@@ -91,12 +92,12 @@ def build_tf_dataset(datasets, sess):
 				gen = dataset_generator(dataset)
 
 			d = tf.data.Dataset.from_generator(gen, output_types=tuple(types))
-			d = d.shuffle(buffer_size=500)
+			# d = d.shuffle(buffer_size=1200)
 			d = d.repeat().batch(batch_size)
 			#d = d.prefetch(1500)
 
 			with tf.name_scope('features'):
-				d_feat = d.map(lambda *x:  x[0]).prefetch(400)
+				d_feat = d.map(lambda *x:  x[0], num_parallel_calls=8).prefetch(batch_size)
 				d_iter = d_feat.make_initializable_iterator()
 				d_iter.make_initializer(d_feat)
 				sess.run(d_iter.initializer)
@@ -104,7 +105,7 @@ def build_tf_dataset(datasets, sess):
 
 			for i in range(1,len(dataset_col_labels)):
 				with tf.name_scope(dataset_col_labels[i]):
-					data = (d.map(lambda *x:  x[i] )).prefetch(400)
+					data = d.map(lambda *x:  x[i],  num_parallel_calls=8).prefetch(batch_size)
 					data_iter = data.make_initializable_iterator( )
 					data_iter.make_initializer(data)
 					sess.run(data_iter.initializer)
@@ -153,13 +154,13 @@ class TfMultiPathClassifier():
 				tasks.append(task['name'])
 			self.dataset_tasks[dataset['name']] = tasks
 
-			self.build_graph(paths)
+		self.build_graph(paths)
 
 
 	def build_graph(self, paths):
 		for p in paths:
 			id = p['name']
-			with tf.name_scope(id + '/feed' ):
+			with tf.variable_scope(id + '/feed', reuse=True):
 				if (p['input'] not in self.comp.keys()):
 					self.handle_placeholders[id + 'input'] = tf.placeholder(tf.string, shape=[])
 					if('input_string' in p):
@@ -179,24 +180,24 @@ class TfMultiPathClassifier():
 						self.handle_placeholders[id + 'target'], tf.float32)  # TODO change input_types to be configurable
 					self.targets[id] = self.iterators[id + 'target'].get_next()
 
-			with tf.name_scope(''):
+			with tf.variable_scope('', reuse=True):
 				self.comp[id] = p['computation']
 				self.logits[id] = self.comp[id](self.inputs[id], self.phase)
 
 			if ('predictor' in p):
-				with tf.name_scope(id + 'predictor'):
+				with tf.variable_scope(id + 'predictor', reuse=True):
 					self.predictors[id] = p['predictor'](self.logits[id])
 			else:
 				with tf.name_scope(id + 'predictor'):
 					self.predictors[id] = self.logits[id]
 
 			if ('loss' in p):
-				with tf.name_scope(id + '/loss'):
+				with tf.variable_scope(id + '/loss', reuse=True):
 					self.loss[id] = p['loss'](self.logits[id], self.targets[id])
 					self.summaries.append(tf.summary.scalar(id + ' loss', self.loss[id]))
 					self.cv_summaries.append(tf.summary.scalar(id + ' loss_cv', self.loss[id]))
 
-				with tf.name_scope(id + '/optimizer'):
+				with tf.variable_scope(id + '/optimizer', reuse=tf.AUTO_REUSE):
 					self.opt[id] = (p['optimizer'].minimize(self.loss[id]))
 
 
@@ -229,29 +230,33 @@ class TfMultiPathClassifier():
 	def train(self):
 		self.sess.run(tf.global_variables_initializer())
 		self.sess.run(tf.local_variables_initializer())
-		for dataset in self.dataset_paths.values():
-			print(dataset)
-			cv_counter=0
-			for i in range(self.params['train_iter']):
-				_, loss, summaries, acc = self.sess.run(
-					[dataset['optimizers'], dataset['losses'], self.merged, self.accuracy],\
-					feed_dict= dataset['feed_dict'] )
 
+		for i in range(self.params['train_iter']):
+			cv_counter = 0
+			for dataset in self.dataset_paths.values():
+				# _, loss, summaries, acc = self.sess.run(
+				# 	[dataset['optimizers'], dataset['losses'], self.merged, self.accuracy],\
+				# 	feed_dict= dataset['feed_dict'] )
+				_, loss= self.sess.run(
+					[dataset['optimizers'], dataset['losses']],\
+					feed_dict= dataset['feed_dict'] )
 				if(i % 500 == 0):
-					self.train_writer.add_summary(summaries, cv_counter)
-					print(acc)
+					#self.train_writer.add_summary(summaries, cv_counter)
+					# print(acc)
 					print(loss, i, '\n-------\n')
 					if('feed_dict_cv' in dataset):
 						print('cross validating')
-						loss, summaries, pred, ll = self.sess.run\
-							([dataset['losses'], self.merged_cv, dataset['predictors'], dataset['targets']],
+						# loss, summaries, pred, ll = self.sess.run\
+						# 	([dataset['losses'], self.merged_cv, dataset['predictors'], dataset['targets']],
+						# 	 feed_dict= dataset['feed_dict_cv'])
+						loss, pred, ll = self.sess.run\
+							([dataset['losses'], dataset['predictors'], dataset['targets']],
 							 feed_dict= dataset['feed_dict_cv'])
-
 
 						for out_counter, p in enumerate(pred):
 							f1_from_integrated_predictions(pred=p, labels=ll[out_counter])
 
-						self.train_writer.add_summary(summaries, cv_counter)
+						#self.train_writer.add_summary(summaries, cv_counter)
 						print('cv loss', loss, '\n----------------------\n')
 						cv_counter += 1
 
@@ -262,12 +267,13 @@ class TfMultiPathClassifier():
 	def get_raw_prediciton(self, pathname, input):
 		gen = inference_generator(input)
 		d = tf.data.Dataset.from_generator(gen, output_types= tf.float32)
-		d = d.batch(400)
+		x = len(input)
+		d = d.batch(x)
 		iter = d.make_one_shot_iterator()
 		handle = self.sess.run(iter.string_handle())
-		if(pathname in self.predictors):
-			return self.predictors[pathname].eval(session= self.sess, feed_dict =
-			{self.phase:True, self.handle_placeholders[self.feed[pathname]+'input' ]: handle })
+		if(pathname in self.logits):
+			return self.logits[pathname].eval(session= self.sess, feed_dict =
+			{self.phase:False, self.handle_placeholders[self.feed[pathname]+'input' ]: handle })
 
 	def get_prediciton(self, pathname, input):
 		gen = inference_generator(input)

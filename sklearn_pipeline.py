@@ -23,7 +23,7 @@ def supervised(data, data_vecs, labels, test_vecs=None, test_labels=None):
 
 	# clf = LogisticRegression(penalty='l1')
 	#clf = KNeighborsClassifier(weights='distance',n_neighbors=10, p=2, n_jobs=10)
-	clf = MLPClassifier(hidden_layer_sizes=(64), alpha=0.0002, batch_size=250)
+	clf = MLPClassifier(hidden_layer_sizes=(512, 512), alpha=0.0002, batch_size=200)
 	clf.fit(X_train, y_train)
 
 	pred = clf.predict(X_test)

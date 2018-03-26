@@ -88,26 +88,43 @@ def single_label_metrics(pred, labels, encoded_labels, labeling, data):
 		print('\n', '\n--------------------------\n')
 	return raw_pred
 
-def multi_label_metrics(pred, labels, encoded_labels, labeling, data):
+def multi_label_metrics(pred, labels, encoded_labels, labeling, data, mute=True):
 	try:
 		print('micro', metrics.f1_score(encoded_labels, pred, average='micro'))
+		# print('f1 samples', metrics.f1_score(encoded_labels, pred, average='samples'))
+		# print('precision samples', metrics.precision_score(encoded_labels, pred, average='samples'))
+		# print('recall samples', metrics.recall_score(encoded_labels, pred, average='samples'))
+		print('accuracy', metrics.accuracy_score(encoded_labels, pred))
 	except Exception as e:
+		print('accuracy', metrics.accuracy_score(encoded_labels, pred))
 		print(e)
-	print('f1 samples', metrics.f1_score(encoded_labels, pred, average='samples'))
-	print('precision samples', metrics.precision_score(encoded_labels, pred, average='samples'))
-	print('recall samples', metrics.recall_score(encoded_labels, pred, average='samples'))
 
 	decoded_pred = []
 	for p in pred:
 		decoded_pred.append(np.where(p == 1)[0])
+	if not mute:
+		for i in range(len(labels)):
+			try:
+				if (not labels[i]) and (not decoded_pred[i]):
+					continue
+			except:
+				p=4
+			print(i, '- ', data[i])
+			print('Prediction: ',  [labeling[x] for x in decoded_pred[i]] )
+			print('Label: ', labels[i])
+			print('\n', '\n--------------------------\n')
 
-	for i in range(len(labels)):
-		if labels[i] == ['not relevant', 'not relevant']:
-			continue
-		print(i, '- ', data[i])
-		print('Prediction: ',  [labeling[x] for x in decoded_pred[i]] )
-		print('Label: ', labels[i])
-		print('\n', '\n--------------------------\n')
+def print_raw_predictions(pred, labels, encoded_labels, labeling, data, mute=True):
+	decoded_pred = []
+	for p in pred:
+		decoded_pred.append(np.where(p == 1)[0])
+	if not mute:
+		for i in range(len(labels)):
+			print(i, '- ', data[i])
+			print('Prediction prob: ', [(labeling[x],pred[i][x]) for x in range(len(pred[i]))])
+			print('Label: ', labels[i])
+			print('\n', '\n--------------------------\n')
+
 
 #gets tokenized comment texts
 def parse_tokenized_comments_json(path, sentence_level = True):
@@ -174,6 +191,7 @@ def parse_hannah_csv(path):
 	entities = []
 	num = []
 	relevance = []
+	sentiments = []
 	with open(path,'r', encoding='mbcs') as fp:
 		reader = csv.reader(fp, delimiter=',')
 
@@ -189,6 +207,7 @@ def parse_hannah_csv(path):
 			data.append(line[6])
 			attr.append([line[5]])
 			entities.append([line[4]])
+			sentiments.append([line[3]])
 			relevance.append(line[2])
 			j = i
 			while (not listed[j + 1][0]):
@@ -196,6 +215,7 @@ def parse_hannah_csv(path):
 				#print(j)
 				entities[counter].append(listed[j][4])
 				attr[counter].append(listed[j][5])
+				sentiments[counter].append(listed[j][3])
 			counter += 1
 
 
@@ -213,7 +233,7 @@ def parse_hannah_csv(path):
 		assert len(entities[i]) == len(attr[i])
 		#print(data[i], relevance[i], entities[i], attr[i])
 
-	return data, entities, attr
+	return data, entities, attr, sentiments
 
 def normalize_feat(features):
 	features = np.asarray(features)
@@ -231,19 +251,21 @@ if __name__ == '__main__':
 	# 		row=[str(comment_num), str(sentence_num),'', '','','', sentence]
 	# 		rows.append(row)
 	# 	rows.append(['***********'])
-	# with open('comments.csv', 'w', encoding='utf-8-sig') as fp:
+	# with open('comments2.csv', 'w', encoding='utf-8-sig') as fp:
 	# 	fieldnames = ['Comment_number', 'Sentence_number', 'Can\'t tell', 'Sentiment', 'Entity', 'Attribute', 'Sentence' ]
 	# 	writer = csv.writer(fp, delimiter=',')
 	# 	writer.writerow(fieldnames)
 	# 	writer.writerows(rows)
+
+
 	entity_dict, attr_dict = parse_hannah_legend('DataSet//organic//legend.csv')
 	print(entity_dict)
 	print(attr_dict)
-	data, entities, attr = parse_hannah_csv('DataSet//organic//comments_PB3.csv')
+	data, entities, attr, sent = parse_hannah_csv('DataSet/organic/19-03-05_comments_HD.csv')
 
 
 
 
-	# for i in range(6000):
-	# 	for j,e in enumerate(entities[i]):
-	# 			print(data[i], entity_dict[e], attr_dict[attr[i][j]] )
+	for i in range(6000):
+		for j,e in enumerate(entities[i]):
+				print(data[i], entity_dict[e], attr_dict[attr[i][j]], sent[i][j])

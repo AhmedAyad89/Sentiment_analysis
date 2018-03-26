@@ -20,6 +20,9 @@ def loss_map(type, weight=1):
 		def fn(pred, labels):
 			i = tf.reduce_mean( tf.nn.sigmoid_cross_entropy_with_logits(logits=pred, labels=labels) )
 			return i * weight
+	# if type == 'sparsemax':
+	# 	def fn(pred, labels):
+	# 		return tf.reduce_mean( tf.contrib.sparsemax )
 	return fn
 
 def construct_path(name, layers, batch_norm=False, dropout=False, dropout_rate=0.5, noise=False, noise_std=0.1, ker_reg=None, activation=tf.nn.relu):
@@ -34,7 +37,7 @@ def construct_path(name, layers, batch_norm=False, dropout=False, dropout_rate=0
 					tmp = tf.layers.dropout(tmp, rate=dropout_rate, training=phase)
 					tmp = tf.cond(phase, lambda: tmp, lambda: tf.scalar_mul(1-dropout_rate, tmp))
 				tmp = tf.layers.dense(tmp, layer, activation=None, name=str(num),
-															kernel_regularizer= ker_reg)
+															kernel_regularizer= ker_reg, reuse=tf.AUTO_REUSE)
 				if batch_norm:
 					tmp = tf.layers.batch_normalization(tmp, training=True)
 				if activation is not None:
@@ -43,10 +46,26 @@ def construct_path(name, layers, batch_norm=False, dropout=False, dropout_rate=0
 		return tmp
 	return compute_path
 
+def softmax_treshold_layer(name, size):
+	def fn(logits, phase):
+		with tf.variable_scope(name+ '/softmax_thresholding_layer', reuse=tf.AUTO_REUSE):
+			b = tf.get_variable(name='bias', shape=(size))
+			tmp = tf.nn.softmax(logits)
+			tmp= tf.add(tmp,b)
+		return tmp
+	return fn
+
 def softmax_predictor():
 	def predict(logits):
 		x = tf.nn.softmax(logits)
 		return tf.one_hot(tf.argmax(x, 1), logits.get_shape()[1])
+	return predict
+
+def thresholded_softmax_predictor():
+	def predict(logits):
+		x = tf.nn.softmax(logits)
+		thresh = tf.constant(0.12, shape= logits.get_shape()[1:], dtype=tf.float32)
+		return tf.greater(x, thresh )
 	return predict
 
 def sigmoid_predictor():
@@ -55,6 +74,10 @@ def sigmoid_predictor():
 		return tf.round(x)
 	return predict
 
+def sparsemax_layer():
+	def fn(logits, phase):
+		return tf.contrib.sparsemax(logits)
+	return fn
 
 #this function takes network predictions and labels with one-hot
 def f1_from_integrated_predictions(pred, labels):
@@ -79,10 +102,47 @@ def config_single_graph():
 	paths = []
 
 	path = {}
-	path['input_dim'] = 4096
+	path['input_dim'] = 4107
 	path['name'] = 'shared1'
-	path['computation'] = construct_path(path['name'], [1024, 512, 512], batch_norm=True, dropout=True, dropout_rate=0.5, noise=False, noise_std=0.16,
-																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.01, scale_l2=0.05, scope=None))
+	path['computation'] = construct_path(path['name'], [512, 512], batch_norm=False, dropout=True, dropout_rate=0.5, noise=False, noise_std=0.16)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.001, scale_l2=0.005, scope=None))
+	path['input'] = 'hannah_organic'
+	paths.append(path)
+
+
+
+	path = {}
+	path['name'] = 'rest_aspects'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [12], batch_norm=False, activation=None)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
+	path['loss'] = loss_map('sigmoid')
+	path['predictor'] = sigmoid_predictor()
+	paths.append(path)
+
+	#
+	# path = {}
+	# path['name'] = 'lap_aspects'
+	# path['input'] = 'lap_aspects_comp'
+	# path['input_dim'] = 88
+	# path['computation'] = softmax_treshold_layer(path['name'], path['input_dim'])
+	# path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer')
+	# path['loss'] = loss_map('sigmoid')
+	# path['predictor'] = sigmoid_predictor()
+	# paths.append(path)
+
+	return paths
+
+def config_organic_graph():
+	paths = []
+
+	path = {}
+	path['input_dim'] = 4130
+	path['name'] = 'shared1'
+	path['computation'] = construct_path(path['name'], [512, 512], batch_norm=False, dropout=True, dropout_rate=0.5, noise=False, noise_std=0.1)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.001, scale_l2=0.005, scope=None))
 	path['input'] = 'hannah_organic'
 	paths.append(path)
 
@@ -91,36 +151,117 @@ def config_single_graph():
 	path['name'] = 'entities'
 	path['input'] = 'shared1'
 	path['input_dim'] = 512
-	path['computation'] = construct_path(path['name'], [22], batch_norm=False,
-																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None), activation=None)
-	path['optimizer'] = tf.train.AdamOptimizer(name='path2_optimizer', learning_rate=0.00001)
+	path['computation'] = construct_path(path['name'], [44], batch_norm=False, activation=None)
 	path['loss'] = loss_map('sigmoid')
-	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
+	path['predictor'] = sigmoid_predictor()
+	path['optimizer'] = tf.train.AdamOptimizer(name='entities_optimizer', learning_rate=0.0001, beta1=0.85, beta2=0.995)
+	paths.append(path)
+
+	# path = {}
+	# path['name'] = 'attrs'
+	# path['input'] = 'shared1'
+	# path['input_dim'] = 512
+	# path['computation'] = construct_path(path['name'], [6], batch_norm=False, activation=tf.nn.relu)
+	# path['loss'] = loss_map('softmax')
+	# path['predictor'] = softmax_predictor()
+	# path['optimizer'] = tf.train.AdamOptimizer(name='attrs_optimizer', learning_rate=0.0001, beta1=0.85, beta2=0.995)
+	# paths.append(path)
+
+
+	# path = {}
+	# path['name'] = 'aspect_comp'
+	# path['input'] = 'shared1'
+	# path['input_dim'] = 512
+	# path['computation'] = construct_path(path['name'], [44], batch_norm=False, activation=tf.nn.relu)
+	# 																		 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	# # path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
+	# # path['loss'] = loss_map('sigmoid')
+	# # path['predictor'] = sigmoid_predictor()
+	# paths.append(path)
+	#
+	#
+	# path = {}
+	# path['name'] = 'aspects'
+	# path['input'] = 'aspect_comp'
+	# path['input_dim'] = 44
+	# path['computation'] = softmax_treshold_layer(path['name'], path['input_dim'])
+	# path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
+	# path['loss'] = loss_map('sigmoid')
+	# path['predictor'] = sigmoid_predictor()
+	# paths.append(path)
+
+	return paths
+
+
+def config_sentiment_graph():
+	paths = []
+
+	path = {}
+	path['input_dim'] = 4096
+	path['name'] = 'shared1'
+	path['computation'] = construct_path(path['name'], [512, 512], batch_norm=False, dropout=True, dropout_rate=0.5, noise=False, noise_std=0.1)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.001, scale_l2=0.005, scope=None))
+	path['input'] = 'sent'
+	paths.append(path)
+
+
+	path = {}
+	path['name'] = 'sent'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [3], batch_norm=False, activation=None)
+	path['loss'] = loss_map('softmax')
+	path['predictor'] = softmax_predictor()
+	path['optimizer'] = tf.train.AdamOptimizer(name='sent_optimizer', learning_rate=0.0001)
+	paths.append(path)
+
+	return paths
+
+def config_joint_graph():
+	paths = []
+
+	path = {}
+	path['input_dim'] = 4096
+	path['name'] = 'shared1'
+	path['computation'] = construct_path(path['name'], [512, 256], batch_norm=False, dropout=True, dropout_rate=0.5, noise=False, noise_std=0.16)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.001, scale_l2=0.005, scope=None))
+	path['input'] = 'hannah_organic'
+	paths.append(path)
+
+
+	path = {}
+	path['name'] = 'lap_aspects'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [88], batch_norm=False, activation=None)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path1_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
+	path['loss'] = loss_map('sigmoid')
+	path['predictor'] = sigmoid_predictor()
+	paths.append(path)
+	#
+	path = {}
+	path['name'] = 'rest_aspects'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [12], batch_norm=False, activation=None)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path2_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
+	path['loss'] = loss_map('sigmoid')
 	path['predictor'] = sigmoid_predictor()
 	paths.append(path)
 
 	path = {}
-	path['name'] = 'attributes'
+	path['name'] = 'org_aspects'
 	path['input'] = 'shared1'
 	path['input_dim'] = 512
-	path['computation'] = construct_path(path['name'], [9], batch_norm=False,
-																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.00001, scale_l2=0.0005, scope=None), activation=None)
-	path['optimizer'] = tf.train.AdamOptimizer(name='path3_optimizer', learning_rate=0.00001)
+	path['computation'] = construct_path(path['name'], [77], batch_norm=False, activation=None)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path2_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
 	path['loss'] = loss_map('sigmoid')
-	#path['loss_computation'] = tf.nn.sigmoid_cross_entropy_with_logits
 	path['predictor'] = sigmoid_predictor()
 	paths.append(path)
 
-	path = {}
-	path['name'] = 'aspects'
-	path['input'] = 'shared1'
-	path['input_dim'] = 512
-	path['computation'] = construct_path(path['name'], [88], batch_norm=False,
-																			 ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None), activation=None )
-	path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
-	path['loss'] = loss_map('sigmoid')
-	path['predictor'] = sigmoid_predictor()
-	paths.append(path)
 
 	return paths
 

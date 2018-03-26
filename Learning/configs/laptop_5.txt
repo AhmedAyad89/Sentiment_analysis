@@ -1,0 +1,24 @@
+batch 500
+pred_prob
+iter 
+
+	path = {}
+	path['input_dim'] = 4127
+	path['name'] = 'shared1'
+	path['computation'] = construct_path(path['name'], [512, 512], batch_norm=False, dropout=True, dropout_rate=0.4, noise=False, noise_std=0.16)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.001, scale_l2=0.005, scope=None))
+	path['input'] = 'hannah_organic'
+	paths.append(path)
+
+
+
+	path = {}
+	path['name'] = 'lap_entities'
+	path['input'] = 'shared1'
+	path['input_dim'] = 88
+	path['computation'] = construct_path(path['name'], [88], batch_norm=False, activation=None)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.0001, scale_l2=0.0005, scope=None))
+	path['optimizer'] = tf.train.AdamOptimizer(name='path4_optimizer', learning_rate=0.0001 , beta1=0.85 , beta2=0.995)
+	path['loss'] = loss_map('sigmoid')
+	path['predictor'] = sigmoid_predictor()
+	paths.append(path)

@@ -1,6 +1,6 @@
 from Learning.multipath_tf_dataset import *
 from visual import *
-from utils import  *
+from utils import *
 from sklearn_pipeline import *
 import tensorflow as tf
 import os
@@ -8,75 +8,88 @@ import numpy as np
 from DataSet.dataset_pipelines import *
 from sklearn import metrics, preprocessing
 from Learning.config_generator import *
+from cove_transform import *
+from keras.models import Sequential
+from keras.layers import Dense, Conv1D, MaxPooling1D, Conv2D, Flatten, GaussianDropout, Dropout, concatenate
+import keras
+from Learning.conv_net import *
+from keras.utils import plot_model
+import pydot
+from IPython.display import SVG
+from keras.utils.vis_utils import model_to_dot
+from sklearn import metrics
 
 
 
-org_dict = Hannah_pipe(scheme=[False, True])
-datasets=[]
 
 
+lap_dict3 = SemEvalPipe(single_label=False, data='Laptop', subtask=[True, True, False])
 
+with open('semEvalLaptop-glove-data', 'rb') as fp:
+	glove_data = pickle.load(fp)
+with open('semEvalLaptop-cove-data', 'rb') as fp:
+	cove_data = pickle.load(fp)
+with open('semEvalLaptop_test-cove-data', 'rb') as fp:
+	test_cove_data = pickle.load(fp)
+with open('semEvalLaptop_test-glove-data', 'rb') as fp:
+	test_glove_data = pickle.load(fp)
+print(glove_data.shape)
 
-print(len(org_dict['encoded_train_labels'][0]))
+cut=35
+glove_data = glove_data[:, :cut, :]
+cove_data = cove_data[:, :cut, :]
+test_cove_data = test_cove_data[:, :cut, :]
+test_glove_data = test_glove_data[:, :cut, :]
+print(glove_data.shape)
 
-
-# supervised(org_dict['train_data'], org_dict['train_vecs'], org_dict['encoded_train_labels'],
-# 					 org_dict['test_vecs'], org_dict['encoded_test_labels'] )
-
-# single_train = []
-# single_test = []
-# for l in ds_dict3['encoded_train_labels']:
-# 	if np.linalg.norm(l, ord=0) == 0:
-# 		n = np.concatenate([l, [1]])
-# 		single_train.append(n)
-# 	else:
-# 		n =  l / np.linalg.norm(l, ord=0)
-# 		n = np.concatenate([n, [0]])
-# 		single_train.append(n)
-# #
-# for i in range(10):
-# 	print(single_train)
-
-# for l in ds_dict3['encoded_test_labels']:
-# 	single_test.append( l / np.linalg.norm(l, ord=0) )
-#
-
-
-
-x =input()
-# pred = [y[:-1] for y in x]
-# pred = np.asarray(pred, dtype=np.int32)
-pred = x
-l = org_dict['encoded_test_labels']
-# print(pred[0], l[0])
-# print(len(pred[0]))
 try:
-	print('micro', metrics.f1_score(l, pred, average='micro'))
-	# print('macro', metrics.f1_score(l, pred, average='macro'))
-	# print('weight', metrics.f1_score(l, pred, average='weighted'))
-except Exception as e:
-	print(e)
-print('f1 samples', metrics.f1_score(l, pred, average='samples'))
-print('precision samples', metrics.precision_score(l, pred, average='samples'))
-print('recall samples', metrics.recall_score(l, pred, average='samples'))
+	with open('semEvalLaptop-coveVocab', 'rb') as fp:
+		vocab = pickle.load(fp)
+	with open('semEvalLaptop-coveVocabIndex', 'rb') as fp:
+		vocab_index = pickle.load(fp)
+except:
+	print('could not load vocab')
+	vocab, vocab_index = build_embedding_matrices(lap_dict3['train_data']+lap_dict3['test_data'])
 
-xp = np.where(x == 1)
-counter = 0
-for i in range(len(test_labels)):
-	# if x[i] == 0 and test_labels[i] == 0:
-	# 	continue
-	print(i, '- ', test_data[i])#, test_aspect_labels[i], '\n',x[i])
-	try:
-		if(xp[i] == 88):
-			print('NA')
-		else:
-			print([aspect_labeling[entry] for entry in xp[i]])
-	except:
-		print((aspect_labeling[xp[i]]))
-	print(org_dict['test_labels'][i])
-	#print(y[i][test_aspect_labels[i]])
-	counter += 1
-	print('\n', '\n--------------------------\n')
+train_sentences = convert_to_indices(lap_dict3['train_data'], max_len=35, vocab_index=vocab_index )
+test_sentences = convert_to_indices(lap_dict3['test_data'], max_len=35, vocab_index=vocab_index )
 
 
-print(counter)
+
+model = keras_conv_net(vocab_size= len(vocab), embd_matrix=vocab)
+model.fit([train_sentences, cove_data, lap_dict3['train_vecs']], lap_dict3['encoded_train_labels'], epochs=2, batch_size=50)
+
+x = model.predict([test_sentences, test_cove_data, lap_dict3['test_vecs']], batch_size=50)
+y = np.round(x)
+multi_label_metrics(y, lap_dict3['test_labels'], lap_dict3['encoded_test_labels'], lap_dict3['labeling'],
+										lap_dict3['test_data'], mute=False)
+
+x = model.predict([train_sentences, cove_data, lap_dict3['train_vecs']])
+y = np.round(x)
+multi_label_metrics(y, lap_dict3['train_labels'], lap_dict3['encoded_train_labels'], lap_dict3['labeling'],
+										lap_dict3['train_data'], mute=True)
+
+
+
+#####################################################################################################################
+# test_glove_sentences, test_cove_sentences = cove_pipeline\
+# 	(lap_dict3['test_data'], glove_dmp= 'semEvalLaptop_test-glove-data', cove_dmp='semEvalLaptop_test-cove-data')
+
+
+# combined = np.concatenate((glove_data, cove_data), axis=2)
+# combined_test = np.concatenate((test_glove_data, test_cove_data), axis=2)
+#
+# model = Sequential()
+# model.add(Conv1D(filters=256, kernel_size=5, activation='relu',kernel_regularizer=keras.regularizers.l1(0.0000005), input_shape=(cut, 900)))
+# print(model.layers[-1].output_shape)
+# model.add(MaxPooling1D(pool_size=2))
+# print(model.layers[-1].output_shape)
+# model.add(Flatten())
+# model.add(Dense(units=256, activation='relu'))
+# model.add(Dense(units=88, activation='sigmoid'))
+# model.compile(optimizer='rmsprop',
+# 							loss='binary_crossentropy')
+#
+#
+# model.fit(combined , lap_dict3['encoded_train_labels'], epochs=40, batch_size=50)
+

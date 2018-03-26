@@ -1,0 +1,24 @@
+batch 150 
+iter 3500 
+	paths = []
+
+	path = {}
+	path['input_dim'] = 4096
+	path['name'] = 'shared1'
+	path['computation'] = construct_path(path['name'], [512, 512], batch_norm=False, dropout=True, dropout_rate=0.5, noise=False, noise_std=0.1)
+																			 #,ker_reg=tf.contrib.layers.l1_l2_regularizer(scale_l1=0.001, scale_l2=0.005, scope=None))
+	path['input'] = 'sent'
+	paths.append(path)
+
+
+	path = {}
+	path['name'] = 'sent'
+	path['input'] = 'shared1'
+	path['input_dim'] = 512
+	path['computation'] = construct_path(path['name'], [3], batch_norm=False, activation=None)
+	path['loss'] = loss_map('softmax')
+	path['predictor'] = softmax_predictor()
+	path['optimizer'] = tf.train.AdamOptimizer(name='sent_optimizer', learning_rate=0.0001)
+	paths.append(path)
+
+	return paths
